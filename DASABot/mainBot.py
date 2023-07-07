@@ -90,7 +90,7 @@ async def cutoff(ctx):
         response += f"JEE Opening Rank: {stats[0]}\n"
         response += f"JEE Closing Rank: {stats[1]}\n"
         response += f"DASA Opening Rank: {stats[2]}\n"
-        response += f"DASA Closing Rank: {stats[3]}\n"
+        response += f"DASA Closing Rank: {stats[3]}\n "
 
         await ctx.send(response)
     except ValueError as e:
@@ -194,10 +194,5 @@ async def split_message(ctx, message):
         for chunk in chunks:
             await ctx.send(chunk)
 
-
-async def load():
-    for file in os.listdir("DASABot/cogs"):
-        if file.endswith(".py"):
-            await bot.load_extension(f"cogs.{file[:-3]}")
 
 bot.run(BOT_TOKEN)

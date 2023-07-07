@@ -19,24 +19,16 @@ bot = commands.Bot(command_prefix = "?", intents = intents)
 
 @bot.event
 async def on_ready():
-    print("Bot is ready.")
+    print("Bot is running.")
 
 
 @bot.command()
 async def ping(ctx):
-    await ctx.send(f'Pong! {round(bot.latency * 1000)}ms')
+    await ctx.channel.send("Pong!")
 
-
-@bot.command(description='Reload a cog.')
-async def reload(ctx, extension):
-	try:
-		await bot.reload_extension(f'cogs.{extension}')
-		await ctx.send(f'`{extension}` `has been reloaded.`')
-	except:
-		await ctx.send("`Invalid module.`")
 
 async def load():
-    for file in os.listdir("./cogs"):
+    for file in os.listdir("DASABot/cogs"):
         if file.endswith(".py"):
             await bot.load_extension(f"cogs.{file[:-3]}")
 

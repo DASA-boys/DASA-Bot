@@ -1,83 +1,49 @@
 import connectRankDB
-from connectRankDB import connectDB
+
 import discord
 from discord.ext import commands
-import asyncio
 
-db = connectDB()
-class DASACommands(commands.Cog):
+class Select (discord.ui.Select):
+    def __init__(self):
+        options = [
+            discord.SelectOption(label = "option1", emoji= " ", description="yeaaa boi"),
+            discord.SelectOption(label = "option2", emoji= " ", description="noooo boi"),
+            discord.SelectOption(label = "option3", emoji= " ", description="maybe boi")
+        ]
+        super().__init__(placeholder="Choose an option", max_values=1, min_values=1, options=options)
 
-	def __init__(self, bot):
-		self.bot = bot
-		self.dbconnect = connectRankDB.connectDB()
+        async def callback(self, interaction : discord.Interaction):
+            user = interaction.user
+            guild = interaction.guild
 
-
-	@commands.Cog.listener()
-	async def on_ready(self):
-		print("DASA COMMANDS cog loaded")
-
-	@commands.command()
-	async def cutoff(self, ctx, college:str, year:str, branch:str = None):
-		"""Get cutoffs."""
-		college = college.lower()
-		if year not in ['2021', '2022']: #checks if the year is given as 2021 or 2022
-			return await ctx.send("Invalid year.")
-
-		await ctx.send('Which Round?(1,2,3): ')
-		round_msg = await self.bot.wait_for("message", check=lambda m: m.author == ctx.author)
-		round = str(round_msg.content)
-		if int(round) not in [1,2,3]: #checks if the round is 1,2 or 3
-			await ctx.send("Invalid round.")
-			return
-
-		await ctx.send('CIWG?(y/n): ')
-		ciwg_msg = await self.bot.wait_for("message", check=lambda m: m.author == ctx.author)
-		ciwg = ciwg_msg.content
-		if ciwg.lower() not in "yn":
-			await ctx.send("Invalid Category.")
-		try:
-			college = db.nick_to_college(str(year), str(round), str(college))
-		except:
-			return await ctx.send("Invalid college name.")
+            if self.values[0] == "option1":
+                print("option 1 chosen")
+            if self.values[1] == "option2":
+                print("option 2 chosen")
+            if self.values[2] == "option3":
+                print("user is a retard")
 
 
-		branch_list = db.request_branch_list(year, round, college, False if ciwg == 'n' else True)
-		ciwg = True if ciwg == 'y' else False
-		if ciwg:
-			branch = f"{branch.upper()}1"
-
-		if branch is not None:
-			while branch.upper() not in branch_list:
-				await ctx.send("Invalid branch name, re-enter. Press Q to Quit.")
-				branch_msg = await self.bot.wait_for("message", check=lambda m: m.author == ctx.author)
-				branch = branch_msg.content
-				if branch == 'Q':
-					return await ctx.send('Quitting..')
+class SelectView(discord.ui.View):
+    def __init__ (self, *, timeout=30):
+        super().__init__(timeout=timeout)
+        self.add_item(Select())
 
 
-			stats = db.get_statistics(year, round, college, branch.upper(), ciwg)
-			embed = discord.Embed(title = f'Cutoffs for {college}',description =  f'Course: {branch[:-1]} (CIWG)\n Round {round}' if ciwg else f'Course: {branch.upper()}\n Round {round}',
-					color = discord.Color.random())
-			embed.set_thumbnail(url='https://dasanit.org/dasa2023/images/dasa_new.png')
-			embed.add_field(name="JEE Opening Rank: ", value = stats[0])
-			embed.add_field(name="JEE Closing Rank: ", value=stats[1])
-			embed.add_field(
-				name="DASA Opening Rank: " if not ciwg else f"CIWG Opening Rank: ", value=stats[2])
-			embed.add_field(
-				name="DASA Closing Rank: " if not ciwg else f"CIWG Closing Rank: ", value=stats[3])
-			await ctx.send(embed = embed)
+class cutoff(commands.Cog):
 
-		else:
-			stats = db.get_statistics_for_all(year, round, college, ciwg)
-			embed = discord.Embed(title = f"Cutoffs for {college}", description = f"Round {round}", color = discord.Color.random())
-			embed.set_thumbnail(url='https://dasanit.org/dasa2023/images/dasa_new.png')
-			for i in stats:
-				if ciwg == False:
-					embed.add_field(name = i[0], value = f"JEE OPENING: {i[1][0]}\nJEE CLOSING: {i[1][1]}\nDASA OPENING: {i[1][2]}\nDASA CLOSING: {i[1][3]}", inline = True)
-				else:
-					embed.add_field(name=i[0], value=f"JEE OPENING: {i[1][0]}\nJEE CLOSING: {i[1][1]}\nCIWG OPENING: {i[1][2]}\nCIWG CLOSING: {i[1][3]}", inline=True)
+    def __init__(self, bot):
+        self.bot = bot
+        self.dbconnect = connectRankDB.connectDB()
 
-			await ctx.send(embed = embed)
+    @commands.Cog.listener()
+    async def on_ready(self):
+        print("cutoff cog loaded")
+
+    @commands.command()
+    async def cutoff(self, ctx):
+        print("cutoff yeahhhh")
+        await ctx.send("Choose from the following:", view = SelectView(), delete_after=15)
 
 async def setup(bot):
-	await bot.add_cog(DASACommands(bot))
+    await bot.add_cog(cutoff(bot) )

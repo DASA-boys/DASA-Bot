@@ -31,7 +31,7 @@ class connectDB:
 
 
     # constants, try not to change
-    DB_KEY_FILENAME = "db_key.json"
+    DB_KEY_FILENAME = "DASABot/db_key.json"
     RANK_SPREADSHEET_KEY = os.getenv("RANK_SPREADSHEET_KEY")
 
 
@@ -83,15 +83,15 @@ class connectDB:
         current_sheet = connectDB.get_sheet(self, year, round)
 
         college_name = connectDB.nick_to_college(self, year, round, college_name)
-        print(college_name, ciwg)
+
         branch_list = []
         for row in current_sheet:
-            if row[1] != college_name:
-                continue## skips any irrelevant college names
-            if not ciwg and row[9] == '1':
-                continue ## checks for non-ciwg
+            if row[1] != college_name: continue ## skips any irrelevant college names
+            if not ciwg and row[9] == '1': continue ## checks for non-ciwg
+
             if row[2] not in branch_list:
                 branch_list.append(row[2])
+
         return branch_list
 
 
@@ -112,24 +112,10 @@ class connectDB:
 
             return row[4:8] # jee_or, jee_cr, dasa_or, dasa_cr
 
-    def get_statistics_for_all(self, year: str, round: str, college_name: str, ciwg: bool):
-        current_sheet = connectDB.get_sheet(self, year, round)
-        print(True)
-        branch_list = connectDB.request_branch_list(self, year, round, college_name, ciwg)
-        print(True)
-        # checks if branch is valid
 
-        for row in current_sheet:
-            if row[1] != college_name:
-                continue
-        ranks = []
-        for branch in branch_list:
-            ranks.append([branch, connectDB.get_statistics(self, year, round, college_name, branch, ciwg)])
-        print(ranks)
-        return ranks
     #function to return 3 lists of colleges based on user's CRL and cutoff
     def analysis(self, rank: int, ciwg: bool, branch: str = None):
-        current_sheet = connectDB.get_sheet(self, "2022", "3")
+        current_sheet = connectDB.get_sheet(self, "2022", "3" )
         highclg = []
         midclg = []
         lowclg = []
