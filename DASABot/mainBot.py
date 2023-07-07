@@ -69,7 +69,7 @@ async def cutoff(ctx):
         await ctx.send("Please enter the branch:")
         branch_msg = await bot.wait_for("message", check=lambda m: m.author == ctx.author)
         branch = branch_msg.content
-        
+
         # Check if the branch is valid for the selected college
         branch_list = db.request_branch_list(year, round, college, False)  # Assuming CIWG status is False
         while branch.upper() not in branch_list:
@@ -90,7 +90,7 @@ async def cutoff(ctx):
         response += f"JEE Opening Rank: {stats[0]}\n"
         response += f"JEE Closing Rank: {stats[1]}\n"
         response += f"DASA Opening Rank: {stats[2]}\n"
-        response += f"DASA Closing Rank: {stats[3]}\n"
+        response += f"DASA Closing Rank: {stats[3]}\n "
 
         await ctx.send(response)
     except ValueError as e:

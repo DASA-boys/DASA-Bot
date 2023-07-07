@@ -25,8 +25,8 @@ class connectDB:
 
     '''
 
-    TO DO: 
-    
+    TO DO:
+
     '''
 
 
@@ -38,35 +38,35 @@ class connectDB:
     # function to get sheet data for a specific year and round
     def get_sheet(self, year : str, round : str):
 
-        # try to find a worksheet for respective year and round, raises value error if not found 
-        sheet_name = f'DASA_{year}_R{round}' 
-        try:   
-            sheet_index = self.worksheet_names.index(sheet_name) 
-        except ValueError: 
+        # try to find a worksheet for respective year and round, raises value error if not found
+        sheet_name = f'DASA_{year}_R{round}'
+        try:
+            sheet_index = self.worksheet_names.index(sheet_name)
+        except ValueError:
             raise ValueError("Invalid year / round")
             return
-        
+
         wksdat = self.worksheet_data[sheet_index]
         return wksdat[2:]
 
 
     # function to request a list of colleges for a specific year and round
-    def request_college_list(self, year : str, round : str): 
-         
-        current_sheet = connectDB.get_sheet(self, year, round)  # stores all values for current year and round    
-        
+    def request_college_list(self, year : str, round : str):
+
+        current_sheet = connectDB.get_sheet(self, year, round)  # stores all values for current year and round
+
         college_list = []
         for row in current_sheet:
             if row[1] not in college_list:
                 college_list.append(row[1])
-        
+
         return college_list[2:]
 
 
     # function to convert a college nickname to the original college name
     def nick_to_college(self, year : str, round : str, college_nick : str):
         current_sheet = connectDB.get_sheet(self, year, round)
-        college_list = connectDB.request_college_list(self, year, round)    
+        college_list = connectDB.request_college_list(self, year, round)
 
         if college_nick in college_list: return college_nick
 
@@ -76,7 +76,7 @@ class connectDB:
 
         raise ValueError("Invalid college name")
         return
-        
+
 
     # function to request a list of branches for a specific year, round and college
     def request_branch_list(self, year : str, round : str, college_name : str, ciwg : bool):
@@ -86,9 +86,9 @@ class connectDB:
 
         branch_list = []
         for row in current_sheet:
-            if row[1] != college_name: continue ## skips any irrelevant college names 
+            if row[1] != college_name: continue ## skips any irrelevant college names
             if not ciwg and row[9] == '1': continue ## checks for non-ciwg
-            
+
             if row[2] not in branch_list:
                 branch_list.append(row[2])
 
@@ -101,21 +101,21 @@ class connectDB:
         branch_list = connectDB.request_branch_list(self, year, round, college_name, ciwg)
         code = branch_code.upper()
 
-        # checks if branch is valid 
+        # checks if branch is valid
         if code not in branch_list:
             raise ValueError("Invalid branch name")
             return
-        
+
         for row in current_sheet:
             if row[1] != college_name: continue
             if row[2] != branch_code: continue
-            
-            return row[4:8] # jee_or, jee_cr, dasa_or, dasa_cr
-    
 
-    #function to return 3 lists of colleges based on user's CRL and cutoff    
+            return row[4:8] # jee_or, jee_cr, dasa_or, dasa_cr
+
+
+    #function to return 3 lists of colleges based on user's CRL and cutoff
     def analysis(self, rank: int, ciwg: bool, branch: str = None):
-        current_sheet = connectDB.get_sheet(self, "2022", "3")
+        current_sheet = connectDB.get_sheet(self, "2022", "3" )
         highclg = []
         midclg = []
         lowclg = []
@@ -150,10 +150,10 @@ class connectDB:
             while True:
                 year = input("Enter year: ")
                 round = input("Enter round: ")
-                
+
                 current_sheet = connectDB.get_sheet(self, year, round)
                 college_list = connectDB.request_college_list(self, year, round)
-                
+
                 print("\nChoose a college from below: ")
                 for college in college_list:
                     print(college)
@@ -168,7 +168,7 @@ class connectDB:
                         print("Invalid college name, re-enter")
                         breaker = True
 
-            
+
                 ciwg_yn = input("Are you CIWG? (Y/N) ")
                 ciwg = ciwg_yn.lower() == 'y'
 
@@ -184,7 +184,7 @@ class connectDB:
                     print("Invalid branch name, re-enter")
                     branch = input()
 
-                
+
                 stats = connectDB.get_statistics(self, year, round, college, truebranch, ciwg)
                 print(f"""
                     \nStatistics for {college}, {truebranch}
@@ -192,7 +192,7 @@ class connectDB:
                     \nJEE Closing Rank: {stats[1]}
                     \nDASA Opening Rank: {stats[2]}
                     \nDASA Closing Rank: {stats[3]}
-                """)  
+                """)
 
         elif userinput == "2":
             rank = int(input("Enter JEE Rank: "))
@@ -203,27 +203,27 @@ class connectDB:
             lowclg, midclg, highclg = connectDB.analysis(self, rank, ciwg, branch)
             print("\n\nLow chances in: \n\n")
             for row in lowclg:
-                print(row) 
+                print(row)
             print("\n\nMid chances in: \n\n")
             for row in midclg:
                 print(row)
             print("\n\nHigh chances in: \n\n")
             for row in highclg:
-                print(row) 
+                print(row)
 
-        else: 
-            print("Invalid input please try again") 
+        else:
+            print("Invalid input please try again")
     '''
 
 
-    # initialisation function 
+    # initialisation function
     def __init__(self):
         load_dotenv()
         connectDB.RANK_SPREADSHEET_KEY = os.getenv("RANK_SPREADSHEET_KEY")
         self.cwd_path = os.getcwd()
 
         # connects to DB
-        
+
         db_key_path = os.path.abspath(connectDB.DB_KEY_FILENAME)  # gets path name of db_key.json
         gc = gspread.service_account(filename = f'{db_key_path}')  # connects to service account
 

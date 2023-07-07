@@ -31,7 +31,7 @@ class SelectView(discord.ui.View):
 
 
 class cutoff(commands.Cog):
-    
+
     def __init__(self, bot):
         self.bot = bot
         self.dbconnect = connectRankDB.connectDB()
@@ -39,11 +39,11 @@ class cutoff(commands.Cog):
     @commands.Cog.listener()
     async def on_ready(self):
         print("cutoff cog loaded")
-    
+
     @commands.command()
     async def cutoff(self, ctx):
         print("cutoff yeahhhh")
         await ctx.send("Choose from the following:", view = SelectView(), delete_after=15)
 
 async def setup(bot):
-    await bot.add_cog(cutoff(bot))
+    await bot.add_cog(cutoff(bot) )
