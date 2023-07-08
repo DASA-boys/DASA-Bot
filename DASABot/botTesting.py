@@ -36,7 +36,7 @@ async def reload(ctx, extension):
 		await ctx.send("`Invalid module.`")
 
 async def load():
-    for file in os.listdir("./cogs"):
+    for file in os.listdir("DASABot\cogs"):
         if file.endswith(".py"):
             await bot.load_extension(f"cogs.{file[:-3]}")
 
