@@ -26,7 +26,7 @@ def ciwg(a):
     elif findWholeWord(a)(i[8]) and ("1" in i[2]):
         newdat.append(i)
         return newdat
-
+        
 def nri(a):
      if (i[1] == a) and ("1" not in i[2]):
             newdat.append(i)
@@ -55,10 +55,10 @@ while True:
     if newdat==[]:
          print("College not found in database")
          continue
-
+    
     ## Displaying available majors based on user provided criteria ##
 
-    print("Majors for the selected school are:  ")
+    print("Majors for the selected school are: ")
 
     for i in range (len(newdat)):
          course_code = newdat[i][2]
