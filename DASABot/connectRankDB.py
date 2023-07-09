@@ -83,7 +83,6 @@ class connectDB:
         current_sheet = connectDB.get_sheet(self, year, round)
 
         college_name = connectDB.nick_to_college(self, year, round, college_name)
-        print(college_name, ciwg)
         branch_list = []
         for row in current_sheet:
             if row[1] != college_name:
@@ -114,18 +113,15 @@ class connectDB:
 
     def get_statistics_for_all(self, year: str, round: str, college_name: str, ciwg: bool):
         current_sheet = connectDB.get_sheet(self, year, round)
-        print(True)
         branch_list = connectDB.request_branch_list(self, year, round, college_name, ciwg)
-        print(True)
         # checks if branch is valid
-
         for row in current_sheet:
             if row[1] != college_name:
                 continue
         ranks = []
         for branch in branch_list:
-            ranks.append([branch, connectDB.get_statistics(self, year, round, college_name, branch, ciwg)])
-        print(ranks)
+            st = connectDB.get_statistics(self, year, round, college_name, branch, ciwg)
+            ranks.append([branch, st])
         return ranks
     #function to return 3 lists of colleges based on user's CRL and cutoff
     def analysis(self, rank: int, ciwg: bool, branch: str = None):
@@ -238,7 +234,7 @@ class connectDB:
 
         # connects to DB
 
-        db_key_path = "DASABot\db_key.json"  # gets path name of db_key.json
+        db_key_path = os.path.abspath(connectDB.DB_KEY_FILENAME)  # gets path name of db_key.json
         gc = gspread.service_account(filename = f'{db_key_path}')  # connects to service account
 
         self.database = gc.open_by_key(connectDB.RANK_SPREADSHEET_KEY) # connects to excel sheet
