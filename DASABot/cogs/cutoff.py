@@ -41,12 +41,12 @@ class DASACommands(commands.Cog):
 			return await ctx.send("Invalid college name.")
 
 
-		branch_list = db.request_branch_list(year, round, college, False if ciwg == 'n' else True)
 		ciwg = True if ciwg == 'y' else False
-		if ciwg:
-			branch = f"{branch.upper()}1"
+		branch_list = db.request_branch_list(year, round, college, ciwg)
 
 		if branch is not None:
+			if ciwg:
+				branch = f"{branch.upper()}1"
 			while branch.upper() not in branch_list:
 				await ctx.send("Invalid branch name, re-enter. Press Q to Quit.")
 				branch_msg = await self.bot.wait_for("message", check=lambda m: m.author == ctx.author)
@@ -65,17 +65,19 @@ class DASACommands(commands.Cog):
 				name="DASA Opening Rank: " if not ciwg else f"CIWG Opening Rank: ", value=stats[2])
 			embed.add_field(
 				name="DASA Closing Rank: " if not ciwg else f"CIWG Closing Rank: ", value=stats[3])
+			embed.set_footer(text='Use these cutoffs to fill in your choices.')
 			await ctx.send(embed = embed)
 
 		else:
 			stats = db.get_statistics_for_all(year, round, college, ciwg)
 			embed = discord.Embed(title = f"Cutoffs for {college}", description = f"Round {round}", color = discord.Color.random())
 			embed.set_thumbnail(url='https://dasanit.org/dasa2023/images/dasa_new.png')
+			embed.set_footer(text = 'Use these cutoffs to fill in your choices.')
 			for i in stats:
 				if ciwg == False:
 					embed.add_field(name = i[0], value = f"JEE OPENING: {i[1][0]}\nJEE CLOSING: {i[1][1]}\nDASA OPENING: {i[1][2]}\nDASA CLOSING: {i[1][3]}", inline = True)
 				else:
-					embed.add_field(name=i[0], value=f"JEE OPENING: {i[1][0]}\nJEE CLOSING: {i[1][1]}\nCIWG OPENING: {i[1][2]}\nCIWG CLOSING: {i[1][3]}", inline=True)
+					embed.add_field(name=f"{i[0][:-1]} (CIWG)", value=f"JEE OPENING: {i[1][0]}\nJEE CLOSING: {i[1][1]}\nCIWG OPENING: {i[1][2]}\nCIWG CLOSING: {i[1][3]}", inline=True)
 
 			await ctx.send(embed = embed)
 
