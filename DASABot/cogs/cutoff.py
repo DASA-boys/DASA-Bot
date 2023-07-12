@@ -2,7 +2,7 @@ import connectRankDB
 from connectRankDB import connectDB
 import discord
 from discord.ext import commands
-
+import Paginator
 db = connectDB()
 
 
@@ -94,84 +94,29 @@ class DASACommands(commands.Cog):
             await ctx.send(embed=embed)
 
     @commands.command()
-    async def dasahelp(self, ctx):
-        """Provides help and usage instructions for DASA commands."""
-        embed = discord.Embed(
-            title="DASA Commands Help",
-            description="Here are the available commands and their usage:",
-            color=discord.Color.blue()
-        )
+    async def rank(self, ctx, rank: int, ciwg: str, branch: str):
+        if rank < 0:
+            await ctx.send("Invalid rank.")
+            return
+        if ciwg.lower() not in "yn":
+            await ctx.send("Invalid Category.")
+        branch = branch.upper()
+        lowclg, midclg, highclg = db.analysis(rank, True if ciwg == 'y' else False, branch)
 
-        embed.add_field(
-            name="**?cutoff <college> <year> <ciwg> <round> [,branchcode]**",
-            value="Get cutoffs.\n\n**Usage:**\n`?cutoff <college>, <year>, <ciwg>, <round> [,branchcode]`\n\n**Parameters:**\n`<college>`: Name of the college (can be nickname)\n`<year>`: Year (2021 or 2022)\n`<ciwg>`: CIWG status (Y or N)\n`<round>`: Round number (1, 2, or 3)\n`[branchcode]` (optional): Branch code",
-            inline=False
-        )
+        lowemb = discord.Embed(title=f"Low Chances for {branch} in: ", color = discord.Color.random())
+        for num, name in enumerate(lowclg,1):
+            lowemb.add_field(
+                name=f"{num}. {name.split('Clos')[0]}", value=f"Clos{name.split('Clos')[1]}")
 
-        embed.add_field(
-            name="**?dasahelp**",
-            value="Display this help message.",
-            inline=False
-        )
+        midemb = discord.Embed(title=f"Mid Chances for {branch} in: ", color = discord.Color.random())
+        for num, name in enumerate(midclg, 1):
+            midemb.add_field(name=f"{num}. {name.split('Clos')[0]}", value=f"Clos{name.split('Clos')[1]}")
+        highemb = discord.Embed(title=f"High Chances for {branch} in: ", color = discord.Color.random())
+        for num, name in enumerate(highclg, 1):
+            highemb.add_field(name=f"{num}. {name.split('Clos')[0]}", value=f"Clos{name.split('Clos')[1]}")
+        embs = [lowemb, midemb, highemb]
 
-        embed.set_footer(text="Note: Parameters are case-sensitive.")
-
-        await ctx.send(embed=embed)
-
-    @commands.command()
-    async def rank(ctx, rank: int, ciwg: str, branch: str = None):
-        """Perform analysis based on the user's rank, CIWG status, and branch.
-        usage: ?rank <rank> <ciwg> [branch]"""
-        if ciwg.lower() not in ['y', 'n']:
-            return await ctx.send("Invalid CIWG status. Use 'y' for yes or 'n' for no.")
-
-        ciwg = ciwg.lower() == 'y'
-
-        try:
-            lowclg, midclg, highclg = db.analysis(rank, ciwg, branch)
-        except ValueError as e:
-            return await ctx.send(str(e))
-
-        embed = discord.Embed(title="Rank Analysis", description=f"Rank: {rank}", color=discord.Color.random())
-        embed.set_thumbnail(url="https://dasanit.org/dasa2023/images/dasa_new.png")
-
-        if branch is None:
-            embed.add_field(name="Low Chances", value="\n".join(lowclg))
-            embed.add_field(name="Mid Chances", value="\n".join(midclg))
-            embed.add_field(name="High Chances", value="\n".join(highclg))
-
-            await split_embed(ctx, embed)
-        else:
-            embed.add_field(name="Branch", value=branch)
-            embed.add_field(name="Low Chances", value="\n".join([clg for clg in lowclg if branch.lower() in clg.lower()]))
-            embed.add_field(name="Mid Chances", value="\n".join([clg for clg in midclg if branch.lower() in clg.lower()]))
-            embed.add_field(name="High Chances", value="\n".join([clg for clg in highclg if branch.lower() in clg.lower()]))
-
-            await ctx.send(embed=embed)
-
-
-async def split_embed(ctx, embed):
-    embed_list = []
-
-    if len(embed) <= 2000:
-        embed_list.append(embed)
-    else:
-        fields = embed.fields
-        current_embed = discord.Embed(title=embed.title, description=embed.description, color=embed.color)
-        current_embed.set_thumbnail(url=embed.thumbnail.url)
-
-        for field in fields:
-            if len(current_embed) + len(field.name) + len(field.value) > 2000:
-                embed_list.append(current_embed)
-                current_embed = discord.Embed(title=embed.title, description=embed.description, color=embed.color)
-                current_embed.set_thumbnail(url=embed.thumbnail.url)
-
-            current_embed.add_field(name=field.name, value=field.value, inline=False)
-
-        embed_list.append(current_embed)
-
-    for embed in embed_list:
-        await ctx.send(embed=embed)
+        await Paginator.Simple(timeout = 60, PageCounterStyle = discord.ButtonStyle.blurple).start(ctx, pages=embs)
 
 
 async def setup(bot):
