@@ -17,7 +17,7 @@ class DASACommands(commands.Cog):
         print("DASA COMMANDS cog loaded")
 
     @commands.command()
-    async def cutoff(self, ctx, college: str, year: str, ciwg: str, round: str,  branch: str = None):
+    async def cutoff(self, ctx, college: str = commands.parameter(description = "example: nitc, nitt, nitk, nits, nsut"), year: str = commands.parameter(description = "example: 2021, 2022"), ciwg: str= commands.parameter(description = "example: y, n, Y, N"), round: str= commands.parameter(description = "example: 1, 2, 3"),  branch: str = commands.parameter(default = None, description = "example: CSE, ECE, EEE, MEC")):
         """Get cutoffs.
                 usage : ?cutoff <college>, <year>, <ciwg>, <round> [,branchcode]"""
         college = college.lower()
