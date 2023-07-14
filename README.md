@@ -1,10 +1,10 @@
-amol is hot
+_amol is hot_
 
-Following are the required pre-requisites:
-1. `gspread` - `pip install gspread`
-2. `discord.py` - `pip install discord.py`
+### Following are the required pre-requisites:  
+`gspread` - `pip install gspread`  
+`discord.py` - `pip install discord.py`  
     
-Account details for the Google Sheets:  
+### Account details for the Google Sheets:  
 ID: dasabot1@gmail.com  
 Password: Discord@123  
 
@@ -31,4 +31,4 @@ Upon this, there are mulitple methods to execute specific functions:
 - `get_statistics_for_all` returns a list of cutoff ranks for all branches under a specified college (using `get_statistics`)
 -  `analysis` returns three lists each containing the names of colleges filtered out by the difference between the user's CRL and college's Round 3 JEE Closing cutoff
 
-Please note that the code assumes the presence of the `gspread` library and a valid service account JSON file with the appropriate access to the Google Sheet.
+NOTE: The code assumes the presence of the `gspread` library and a valid service account JSON file with the appropriate access to the Google Sheet.
