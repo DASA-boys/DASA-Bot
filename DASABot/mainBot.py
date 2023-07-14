@@ -14,10 +14,9 @@ BOT_TOKEN = os.getenv("BOT_TOKEN")
 
 intents = discord.Intents.default()
 intents.message_content = True
-bot = commands.Bot(command_prefix="?", intents=intents,help_command=PrettyHelp(color = discord.Color.random(), no_category = "Developer commands."))
-
-# Initialize the connectDB object
-# db = connectDB()
+bot = commands.Bot(command_prefix="?",
+intents=intents,help_command=PrettyHelp(color = discord.Color.random(),
+                                        no_category = "Developer commands."))
 
 @bot.event
 async def on_ready():
@@ -31,11 +30,11 @@ async def ping(ctx):
 @bot.command(description='Reload a cog.')
 @commands.is_owner()
 async def reload(ctx, extension):
-	try:
-		await bot.reload_extension(f'cogs.{extension}')
-		await ctx.send(f'`{extension}` `has been reloaded.`')
-	except:
-		await ctx.send("`Invalid module.`")
+    try:
+        await bot.reload_extension(f'cogs.{extension}')
+        await ctx.send(f'`{extension}` `has been reloaded.`')
+    except:
+        await ctx.send("`Invalid module.`")
 
 async def load():
     for file in os.listdir("./cogs"):

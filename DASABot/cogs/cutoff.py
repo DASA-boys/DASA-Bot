@@ -5,7 +5,6 @@ from discord.ext import commands
 import Paginator
 db = connectDB()
 
-
 class DASACommands(commands.Cog):
 
     def __init__(self, bot):
@@ -17,7 +16,12 @@ class DASACommands(commands.Cog):
         print("DASA COMMANDS cog loaded")
 
     @commands.command()
-    async def cutoff(self, ctx, college: str = commands.parameter(description = "example: nitc, nitt, nitk, nits, nsut"), year: str = commands.parameter(description = "example: 2021, 2022"), ciwg: str= commands.parameter(description = "example: y, n, Y, N"), round: str= commands.parameter(description = "example: 1, 2, 3"),  branch: str = commands.parameter(default = None, description = "example: CSE, ECE, EEE, MEC")):
+    async def cutoff(self, ctx,
+                        college: str = commands.parameter(description = "example: nitc, nitt, nitk, nits, nsut"),
+                        year: str = commands.parameter(description = "example: 2021, 2022"), ciwg: str= commands.parameter(description = "example: y, n, Y, N"),
+                        round: str= commands.parameter(description = "example: 1, 2, 3"),
+                        branch: str = commands.parameter(default = None,
+                                                            description = "example: CSE, ECE, EEE, MEC")):
         """Get cutoffs.
                 usage : ?cutoff <college>, <year>, <ciwg>, <round> [,branchcode]"""
         college = college.lower()
@@ -109,7 +113,6 @@ class DASACommands(commands.Cog):
         embs = [lowemb, midemb, highemb]
 
         await Paginator.Simple(timeout = 60, PageCounterStyle = discord.ButtonStyle.blurple).start(ctx, pages=embs)"""
-
 
 async def setup(bot):
     await bot.add_cog(DASACommands(bot))
