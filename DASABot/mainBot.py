@@ -174,12 +174,6 @@ async def dasahelp(ctx):
 
     Usage: `?cutoff`
     Follow the prompts to enter the required information.
-
-    **2. Rank Command**
-    Performs analysis based on the user's rank, CIWG status, and branch.
-
-    Usage: `?rank`
-    Follow the prompts to enter the required information.
     """
 
     # Send the formatted help message as a response
