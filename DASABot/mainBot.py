@@ -97,66 +97,66 @@ async def cutoff(ctx):
         await ctx.send(str(e))
 
 
-@bot.command()
-async def rank(ctx):
-    try:
-        # Prompt user for rank
-        await ctx.send("Please enter your rank:")
-        rank_msg = await bot.wait_for("message", check=lambda m: m.author == ctx.author)
-        rank = int(rank_msg.content)
+# @bot.command()
+# async def rank(ctx):
+#     try:
+#         # Prompt user for rank
+#         await ctx.send("Please enter your rank:")
+#         rank_msg = await bot.wait_for("message", check=lambda m: m.author == ctx.author)
+#         rank = int(rank_msg.content)
 
-        # Prompt user for year
-        await ctx.send("Please enter the year:")
-        year_msg = await bot.wait_for("message", check=lambda m: m.author == ctx.author)
-        year = year_msg.content
+#         # Prompt user for year
+#         await ctx.send("Please enter the year:")
+#         year_msg = await bot.wait_for("message", check=lambda m: m.author == ctx.author)
+#         year = year_msg.content
 
-        # Validate the year
-        valid_years = ["2021", "2022"]
-        while year not in valid_years:
-            await ctx.send("Invalid year, re-enter")
-            year_msg = await bot.wait_for("message", check=lambda m: m.author == ctx.author)
-            year = year_msg.content
+#         # Validate the year
+#         valid_years = ["2021", "2022"]
+#         while year not in valid_years:
+#             await ctx.send("Invalid year, re-enter")
+#             year_msg = await bot.wait_for("message", check=lambda m: m.author == ctx.author)
+#             year = year_msg.content
 
-        # Prompt user for round
-        await ctx.send("Please enter the round:")
-        round_msg = await bot.wait_for("message", check=lambda m: m.author == ctx.author)
-        round = round_msg.content
+#         # Prompt user for round
+#         await ctx.send("Please enter the round:")
+#         round_msg = await bot.wait_for("message", check=lambda m: m.author == ctx.author)
+#         round = round_msg.content
 
-        # Validate the round
-        valid_rounds = ["1", "2", "3"]
-        while round not in valid_rounds:
-            await ctx.send("Invalid round, re-enter")
-            round_msg = await bot.wait_for("message", check=lambda m: m.author == ctx.author)
-            round = round_msg.content
+#         # Validate the round
+#         valid_rounds = ["1", "2", "3"]
+#         while round not in valid_rounds:
+#             await ctx.send("Invalid round, re-enter")
+#             round_msg = await bot.wait_for("message", check=lambda m: m.author == ctx.author)
+#             round = round_msg.content
 
-        # Prompt user for CIWG status
-        await ctx.send("Are you CIWG? (Y/N)")
-        ciwg_msg = await bot.wait_for("message", check=lambda m: m.author == ctx.author)
-        ciwg = ciwg_msg.content.lower() == "y"
+#         # Prompt user for CIWG status
+#         await ctx.send("Are you CIWG? (Y/N)")
+#         ciwg_msg = await bot.wait_for("message", check=lambda m: m.author == ctx.author)
+#         ciwg = ciwg_msg.content.lower() == "y"
 
-        # Prompt the user for branch
-        await ctx.send("Which Branch?")
-        branch_msg = await bot.wait_for("message", check=lambda m: m.author == ctx.author)
-        branch = branch_msg.content.upper()
+#         # Prompt the user for branch
+#         await ctx.send("Which Branch?")
+#         branch_msg = await bot.wait_for("message", check=lambda m: m.author == ctx.author)
+#         branch = branch_msg.content.upper()
 
-        # Get the cutoff statistics
-        lowclg, midclg, highclg = db.analysis(rank, ciwg, branch)
+#         # Get the cutoff statistics
+#         lowclg, midclg, highclg = db.analysis(rank, ciwg, branch)
 
-        # Send the cutoff statistics as separate messages
-        response = f"\n\nLow chances in: \n\n"
-        response += "\n".join(lowclg)
-        await split_message(ctx, response)
+#         # Send the cutoff statistics as separate messages
+#         response = f"\n\nLow chances in: \n\n"
+#         response += "\n".join(lowclg)
+#         await split_message(ctx, response)
 
-        response = f"\n\nMid chances in: \n\n"
-        response += "\n".join(midclg)
-        await split_message(ctx, response)
+#         response = f"\n\nMid chances in: \n\n"
+#         response += "\n".join(midclg)
+#         await split_message(ctx, response)
 
-        response = f"\n\nHigh chances in: \n\n"
-        response += "\n".join(highclg)
-        await split_message(ctx, response)
+#         response = f"\n\nHigh chances in: \n\n"
+#         response += "\n".join(highclg)
+#         await split_message(ctx, response)
 
-    except ValueError as e:
-        await ctx.send(str(e))
+#     except ValueError as e:
+#         await ctx.send(str(e))
 
 @bot.command()
 async def dasahelp(ctx):
