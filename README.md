@@ -1,8 +1,8 @@
 amol is hot
 
 Following are the required pre-requisites:
-`gspread` - `pip install gspread`
-`discord.py` - `pip install discord.py`
+1. `gspread` - `pip install gspread`
+2. `discord.py` - `pip install discord.py`
     
 a/c details for google sheet are:
 email: dasabot1@gmail.com
