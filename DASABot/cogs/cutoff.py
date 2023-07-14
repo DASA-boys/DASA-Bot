@@ -93,7 +93,7 @@ class DASACommands(commands.Cog):
 
             await ctx.send(embed=embed)
 
-    @commands.command()
+    """@commands.command()
     async def rank(self, ctx, rank: int, ciwg: str, branch: str):
         if rank < 0:
             await ctx.send("Invalid rank.")
@@ -116,7 +116,7 @@ class DASACommands(commands.Cog):
             highemb.add_field(name=f"{num}. {name.split('Clos')[0]}", value=f"Clos{name.split('Clos')[1]}")
         embs = [lowemb, midemb, highemb]
 
-        await Paginator.Simple(timeout = 60, PageCounterStyle = discord.ButtonStyle.blurple).start(ctx, pages=embs)
+        await Paginator.Simple(timeout = 60, PageCounterStyle = discord.ButtonStyle.blurple).start(ctx, pages=embs)"""
 
 
 async def setup(bot):
