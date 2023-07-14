@@ -4,9 +4,9 @@ Following are the required pre-requisites:
 1. `gspread` - `pip install gspread`
 2. `discord.py` - `pip install discord.py`
     
-a/c details for google sheet are:
-email: dasabot1@gmail.com
-password: Discord@123
+Account details for the Google Sheets:  
+ID: dasabot1@gmail.com  
+Password: Discord@123  
 
 ---
 
