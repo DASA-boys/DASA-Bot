@@ -24,17 +24,9 @@ class DASACommands(commands.Cog):
         if year not in ['2021', '2022']:  # checks if the year is given as 2021 or 2022
             return await ctx.send("Invalid year.")
 
-        """await ctx.send('Which Round?(1,2,3): ')
-		round_msg = await self.bot.wait_for("message", check=lambda m: m.author == ctx.author)
-		round = str(round_msg.content)"""
-
         if int(round) not in [1, 2, 3]:  # checks if the round is 1,2 or 3
             await ctx.send("Invalid round.")
             return
-
-        """await ctx.send('CIWG?(y/n): ')
-		ciwg_msg = await self.bot.wait_for("message", check=lambda m: m.author == ctx.author)
-		ciwg = ciwg_msg.content"""
 
         if ciwg.lower() not in "yn":
             await ctx.send("Invalid Category.")
