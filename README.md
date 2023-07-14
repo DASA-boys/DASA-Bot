@@ -1,12 +1,12 @@
 amol is hot
 
-run these commands before running:
-pip install gspread
-pip install discord.py
+Following are the required pre-requisites:
+`gspread` - `pip install gspread`
+`discord.py` - `pip install discord.py`
     
 a/c details for google sheet are:
 email: dasabot1@gmail.com
-pass: Discord@123
+password: Discord@123
 
 ---
 
@@ -28,6 +28,7 @@ Upon this, there are mulitple methods to execute specific functions:
 - `nick_to_college` converts any college nickname to its full name and returns it
 - `request_branch_list` returns a list of valid branches under a college depending on whether the student qualifies for ciwg or not
 - `get_statistics` returns a list of the cutoff ranks for a specific branch under a college
+- `get_statistics_for_all` returns a list of cutoff ranks for all branches under a specified college (using `get_statistics`)
 -  `analysis` returns three lists each containing the names of colleges filtered out by the difference between the user's CRL and college's Round 3 JEE Closing cutoff
 
 Please note that the code assumes the presence of the `gspread` library and a valid service account JSON file with the appropriate access to the Google Sheet.
