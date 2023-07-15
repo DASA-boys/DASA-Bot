@@ -25,6 +25,7 @@ class DASACommands(commands.Cog):
         """Get cutoffs.
                 usage : ?cutoff <college>, <year>, <ciwg>, <round> [,branchcode]"""
         college = college.lower()
+        college = college.strip('\"')
         if year not in ['2021', '2022']:  # checks if the year is given as 2021 or 2022
             return await ctx.send("Invalid year.")
 

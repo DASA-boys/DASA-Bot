@@ -68,7 +68,8 @@ class connectDB:
         current_sheet = connectDB.get_sheet(self, year, round)
         college_list = connectDB.request_college_list(self, year, round)
 
-        if college_nick in college_list: return college_nick
+        if college_nick in college_list: 
+            return college_nick
 
         for row in current_sheet:
             if college_nick in row[8]:
