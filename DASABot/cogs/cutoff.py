@@ -2,7 +2,7 @@ import connectRankDB
 from connectRankDB import connectDB
 import discord
 from discord.ext import commands
-
+import Paginator
 db = connectDB()
 
 class DASACommands(commands.Cog):
