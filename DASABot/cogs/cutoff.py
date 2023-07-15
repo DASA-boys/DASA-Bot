@@ -33,7 +33,7 @@ class DASACommands(commands.Cog):
             return
 
         if ciwg.lower() not in "yn":
-            await ctx.send("Invalid Category, Please input y/n for ciwgc status")
+            await ctx.send("Invalid Category.")
 
         try:
             college = db.nick_to_college(str(year), str(round), str(college))
