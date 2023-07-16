@@ -90,6 +90,29 @@ class DASACommands(commands.Cog):
 
             await ctx.send(embed=embed)
 
+    @commands.command()
+    async def coff(self, ctx,*,  input_str:str):
+        print(input_str)
+        values = input_str.split()
+        print(values)
+        college, year, round, branch, ciwg = None, None, None, None, None
+        for arg in values:
+            print(arg)
+            if arg.isnumeric():
+                if int(arg) in [2021, 2022, 2023]:
+                    year = arg
+                elif int(arg) in [1, 2, 3]:
+                    round = arg
+            elif arg.isalpha():
+                if len(arg) > 3:
+                    college = arg
+                elif len(arg) < 4 and len(arg) > 1:
+                    branch = arg
+                elif arg in ['y', 'n']:
+                    ciwg = arg
+
+        await ctx.send(college, year, round, branch, ciwg)
+
     """@commands.command()
     async def rank(self, ctx, rank: int, ciwg: str, branch: str):
         if rank < 0:
