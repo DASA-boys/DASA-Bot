@@ -15,18 +15,18 @@ class DASACommands(commands.Cog):
     async def on_ready(self):
         print("DASA COMMANDS cog loaded")
 
-    @commands.command()
+    """@commands.command()
     async def cutoff(self, ctx,
                         college: str = commands.parameter(description = "example: nitc, nitt, nitk, nits, nsut, (use quotes for split names)"),
                         year: str = commands.parameter(description = "example: 2021, 2022"), ciwg: str= commands.parameter(description = "example: y, n, Y, N"),
                         round: str= commands.parameter(description = "example: 1, 2, 3"),
                         branch: str = commands.parameter(default = None,
                                                             description = "example: CSE, ECE, EEE, MEC")):
-        """Get cutoffs.
-                usage : ?cutoff <college>, <year>, <ciwg>, <round> [,branchcode]"""
+            Get cutoffs.
+                usage : ?cutoff <college>, <year>, <ciwg>, <round> [,branchcode]
         college = college.lower()
         college = college.strip('\"')
-        if year not in ['2021', '2022']:  # checks if the year is given as 2021 or 2022
+        if year not in ['2021', '2022', '2023']:  # checks if the year is given as 2021 or 2022
             return await ctx.send("Invalid year.")
 
         if int(round) not in [1, 2, 3]:  # checks if the round is 1,2 or 3
@@ -88,16 +88,20 @@ class DASACommands(commands.Cog):
                         value=f"JEE OPENING: {i[1][0]}\nJEE CLOSING: {i[1][1]}\nCIWG OPENING: {i[1][2]}\nCIWG CLOSING: {i[1][3]}",
                         inline=True)
 
-            await ctx.send(embed=embed)
+            await ctx.send(embed=embed)"""
 
     @commands.command()
-    async def coff(self, ctx,*,  input_str:str):
-        print(input_str)
+    async def cutoff(self, ctx,*,  input_str:str):
+        """usage : ?cutoff college year round ciwg(y/n) [branch]
+        NOTE: arguments need not be in same order
+        college, ex: nitk, nitc, nitt, nsut
+        year, ex: 2021, 2022, 2023
+        round, ex: 1, 2, 3
+        ciwg, ex: y, n
+        branch(optional), ex: cse, ece, eee, mec"""
         values = input_str.split()
-        print(values)
         college, year, round, branch, ciwg = None, None, None, None, None
         for arg in values:
-            print(arg)
             if arg.isnumeric():
                 if int(arg) in [2021, 2022, 2023]:
                     year = arg
@@ -106,12 +110,63 @@ class DASACommands(commands.Cog):
             elif arg.isalpha():
                 if len(arg) > 3:
                     college = arg
-                elif len(arg) < 4 and len(arg) > 1:
+                elif len(arg) in [2,3]:
                     branch = arg
                 elif arg in ['y', 'n']:
                     ciwg = arg
+        try:
+            college = db.nick_to_college(str(year), str(round), str(college))
+        except:
+            return await ctx.send("Invalid college name.")
+        ciwg = True if ciwg == 'y' else False
+        branch_list = db.request_branch_list(year, round, college, ciwg)
 
-        await ctx.send(college, year, round, branch, ciwg)
+        if branch is not None:
+            if ciwg:
+                branch = f"{branch.upper()}1"
+            while branch.upper() not in branch_list:
+                await ctx.send("Invalid branch name, re-enter. Press Q to Quit.")
+                branch_msg = await self.bot.wait_for("message", check=lambda m: m.author == ctx.author)
+                branch = branch_msg.content
+                if branch == 'Q':
+                    return await ctx.send('Quitting...')
+
+            stats = db.get_statistics(
+                year, round, college, branch.upper(), ciwg)
+            embed = discord.Embed(
+                title=f'Cutoffs for {college}',
+            				description=f'Course: {branch[:-1]} (CIWG)\n Round {round}' if ciwg else f'Course: {branch.upper()}\n Round {round}',
+            				color=discord.Color.random())
+            embed.set_thumbnail(
+                url='https://dasanit.org/dasa2023/images/dasa_new.png')
+            embed.add_field(name="JEE Opening Rank: ", value=stats[0])
+            embed.add_field(name="JEE Closing Rank: ", value=stats[1])
+            embed.add_field(
+                name="DASA Opening Rank: " if not ciwg else f"CIWG Opening Rank: ", value=stats[2])
+            embed.add_field(
+                name="DASA Closing Rank: " if not ciwg else f"CIWG Closing Rank: ", value=stats[3])
+            await ctx.send(embed=embed)
+
+        else:
+            stats = db.get_statistics_for_all(year, round, college, ciwg)
+            embed = discord.Embed(
+                title=f"Cutoffs for {college}", description=f"Round {round}", color=discord.Color.random())
+            embed.set_thumbnail(
+                url='https://dasanit.org/dasa2023/images/dasa_new.png')
+            for i in stats:
+                if ciwg == False:
+                    embed.add_field(
+                        name=i[0],
+                        value=f"JEE OPENING: {i[1][0]}\nJEE CLOSING: {i[1][1]}\nDASA OPENING: {i[1][2]}\nDASA CLOSING: {i[1][3]}",
+                        inline=True)
+                else:
+                    embed.add_field(
+                        name=f"{i[0][:-1]} (CIWG)",
+                        value=f"JEE OPENING: {i[1][0]}\nJEE CLOSING: {i[1][1]}\nCIWG OPENING: {i[1][2]}\nCIWG CLOSING: {i[1][3]}",
+                        inline=True)
+
+            await ctx.send(embed=embed)
+
 
     """@commands.command()
     async def rank(self, ctx, rank: int, ciwg: str, branch: str):
