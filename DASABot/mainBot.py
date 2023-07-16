@@ -36,6 +36,14 @@ async def reload(ctx, extension):
     except:
         await ctx.send("`Invalid module.`")
 
+@bot.command(description='Turns off the bot.')
+@commands.is_owner()
+async def shut(ctx):
+    await ctx.send('`Bot going offline!`👋')
+    await bot.change_presence(status=discord.Status.offline)
+    await bot.close()
+    exit()
+
 async def load():
     for file in os.listdir("./cogs"):
         if file.endswith(".py"):
