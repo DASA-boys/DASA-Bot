@@ -17,7 +17,7 @@ class DASACommands(commands.Cog):
 
     @commands.command()
     async def cutoff(self, ctx,
-                        college: str = commands.parameter(description = "example: nitc, nitt, nitk, nits, nsut"),
+                        college: str = commands.parameter(description = "example: nitc, nitt, nitk, nits, nsut, (use quotes for split names)"),
                         year: str = commands.parameter(description = "example: 2021, 2022"), ciwg: str= commands.parameter(description = "example: y, n, Y, N"),
                         round: str= commands.parameter(description = "example: 1, 2, 3"),
                         branch: str = commands.parameter(default = None,
