@@ -135,7 +135,7 @@ class DASACommands(commands.Cog):
                 year, round, college, branch.upper(), ciwg)
             embed = discord.Embed(
                 title=f'Cutoffs for {college}',
-            				description=f'Course: {branch[:-1]} (CIWG)\n Round {round}' if ciwg else f'Course: {branch.upper()}\n Round {round}',
+            				description=f'Course: {branch[:-1]} (CIWG)\n Round {round}({year})' if ciwg else f'Course: {branch.upper()}\n Round {round}',
             				color=discord.Color.random())
             embed.set_thumbnail(
                 url='https://dasanit.org/dasa2023/images/dasa_new.png')
@@ -150,7 +150,7 @@ class DASACommands(commands.Cog):
         else:
             stats = db.get_statistics_for_all(year, round, college, ciwg)
             embed = discord.Embed(
-                title=f"Cutoffs for {college}", description=f"Round {round}", color=discord.Color.random())
+                title=f"Cutoffs for {college}", description=f"Round {round}({year})", color=discord.Color.random())
             embed.set_thumbnail(
                 url='https://dasanit.org/dasa2023/images/dasa_new.png')
             for i in stats:
