@@ -2,7 +2,7 @@ import connectRankDB
 from connectRankDB import connectDB
 import discord
 from discord.ext import commands
-
+import Paginator
 db = connectDB()
 
 class DASACommands(commands.Cog):
@@ -17,7 +17,7 @@ class DASACommands(commands.Cog):
 
     @commands.command()
     async def cutoff(self, ctx,
-                        college: str = commands.parameter(description = "example: nitc, nitt, nitk, nits, nsut"),
+                        college: str = commands.parameter(description = "example: nitc, nitt, nitk, nits, nsut, (use quotes for split names)"),
                         year: str = commands.parameter(description = "example: 2021, 2022"), ciwg: str= commands.parameter(description = "example: y, n, Y, N"),
                         round: str= commands.parameter(description = "example: 1, 2, 3"),
                         branch: str = commands.parameter(default = None,
@@ -25,6 +25,7 @@ class DASACommands(commands.Cog):
         """Get cutoffs.
                 usage : ?cutoff <college>, <year>, <ciwg>, <round> [,branchcode]"""
         college = college.lower()
+        college = college.strip('\"')
         if year not in ['2021', '2022']:  # checks if the year is given as 2021 or 2022
             return await ctx.send("Invalid year.")
 
@@ -33,7 +34,7 @@ class DASACommands(commands.Cog):
             return
 
         if ciwg.lower() not in "yn":
-            await ctx.send("Invalid Category.")
+            await ctx.send("Invalid Category. Please enter y/n for ciwgc status")
 
         try:
             college = db.nick_to_college(str(year), str(round), str(college))
