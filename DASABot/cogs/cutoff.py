@@ -160,13 +160,15 @@ class DASACommands(commands.Cog):
                         value=f"JEE OPENING: {i[1][0]}\nJEE CLOSING: {i[1][1]}\nDASA OPENING: {i[1][2]}\nDASA CLOSING: {i[1][3]}",
                         inline=True)
                 else:
-                    embed.add_field(
+                    if i[0][-1] !='1':
+                        continue
+                    else:
+                        embed.add_field(
                         name=f"{i[0][:-1]} (CIWG)",
                         value=f"JEE OPENING: {i[1][0]}\nJEE CLOSING: {i[1][1]}\nCIWG OPENING: {i[1][2]}\nCIWG CLOSING: {i[1][3]}",
                         inline=True)
 
             await ctx.send(embed=embed)
-
 
     """@commands.command()
     async def rank(self, ctx, rank: int, ciwg: str, branch: str):
