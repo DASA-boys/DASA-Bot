@@ -32,7 +32,7 @@ class DASACommands(commands.Cog):
         view.add_item(delete)
 
         values = input_str.split()
-        college, year, round, branch, ciwg = None, None, None, None, None
+        college, year, round, branch, ciwg = "", None, None, None, None
         for arg in values:
             if arg.isnumeric():
                 if int(arg) in [2021, 2022, 2023]:
@@ -40,12 +40,13 @@ class DASACommands(commands.Cog):
                 elif int(arg) in [1, 2, 3]:
                     round = arg
             elif arg.isalpha():
-                if len(arg) > 3:
-                    college = arg
+                if len(arg) > 3 or arg == "nit":
+                    college += f"{arg} "
                 elif len(arg) in [2,3]:
                     branch = arg
                 elif arg in ['y', 'n']:
                     ciwg = arg
+        college = college[:-1]
         try:
             college = db.nick_to_college(str(year), str(round), str(college))
         except:
