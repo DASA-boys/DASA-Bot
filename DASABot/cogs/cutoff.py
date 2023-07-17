@@ -26,7 +26,7 @@ class DASACommands(commands.Cog):
         ciwg, ex: y, n
         branch(optional), ex: cse, ece, eee, mec"""
         delete = Button(label="Delete", style=discord.ButtonStyle.danger)
-        dms = Button(label="Send on Private Messages", style=discord.ButtonStyle.green)
+        dms = Button(label="Send in DMs", style=discord.ButtonStyle.green)
         view = View()
         view.add_item(dms)
         view.add_item(delete)
@@ -77,7 +77,7 @@ class DASACommands(commands.Cog):
                 name="DASA Opening Rank: " if not ciwg else f"CIWG Opening Rank: ", value=stats[2])
             embed.add_field(
                 name="DASA Closing Rank: " if not ciwg else f"CIWG Closing Rank: ", value=stats[3])
-            embed.set_footer(text = 'This message will be automatically deleted in 120s.\nTo receive this message in your DMs, press "Send in Private Messages".\nTo delete this message, press "Delete".')
+            embed.set_footer(text = 'This message will be automatically deleted in 120s.\nTo receive this message in your DMs, press "Send in DMs".\nTo delete this message, press "Delete".')
             m = await ctx.send(embed=embed, delete_after=120, view = view)
 
             async def dms_callback(interaction):
@@ -105,7 +105,7 @@ class DASACommands(commands.Cog):
                         value=f"JEE OPENING: {i[1][0]}\nJEE CLOSING: {i[1][1]}\nCIWG OPENING: {i[1][2]}\nCIWG CLOSING: {i[1][3]}",
                         inline=True)
             embed.set_footer(
-                text='This message will be automatically deleted in 120s.\nTo receive this message in your DMs, press "Send in Private Messages".\nTo delete this message, press "Delete".')
+                text='This message will be automatically deleted in 120s.\nTo receive this message in your DMs, press "Send in DMs".\nTo delete this message, press "Delete".')
             m = await ctx.send(embed=embed, delete_after=120, view = view)
 
         async def dms_callback(interaction):
@@ -113,6 +113,7 @@ class DASACommands(commands.Cog):
                 dmuser = await self.bot.fetch_user(ctx.author.id)
             else:
                 dmuser = await self.bot.fetch_user(interaction.user.id)
+            embed.remove_footer()
             await dmuser.send(embed = embed)
             await ctx.send("Cutoffs have been sent in your DMs.")
 
