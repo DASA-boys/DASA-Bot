@@ -129,25 +129,15 @@ class DASACommands(commands.Cog):
         delete.callback = delete_callback
         dms.callback = dms_callback
 
-    @commands.command()
-    async def chance(self, ctx, *, input_str: str):
+    @commands.hybrid_command()
+    async def chance(self, ctx, rank:str, ciwg:str, branch:str = None):
         m = None
         delete = Button(label="Delete", style=discord.ButtonStyle.danger)
         dms = Button(label="Send in DMs", style=discord.ButtonStyle.green)
         view = View()
         view.add_item(dms)
         view.add_item(delete)
-        values = input_str.split()
         embed = None
-        rank, branch, ciwg = None, None, None
-        for arg in values:
-            if arg.isnumeric():
-                rank = arg
-            elif arg.isalpha():
-                if len(arg) in [2, 3]:
-                    branch = arg
-                elif arg.lower() in ['y', 'n']:
-                    ciwg = arg
         ciwg = True if ciwg == 'y' else False
         if branch is not None:
             cutoffs, colleges = db.reverse_engine(rank, ciwg, branch)
