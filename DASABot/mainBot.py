@@ -4,6 +4,7 @@ from connectRankDB import connectDB
 
 import discord
 from discord.ext import commands
+from discord import app_commands
 import asyncio
 
 from pretty_help import PrettyHelp
@@ -14,14 +15,19 @@ BOT_TOKEN = os.getenv("BOT_TOKEN")
 
 intents = discord.Intents.all()
 intents.message_content = True
-bot = commands.Bot(command_prefix="?",
+bot = commands.Bot(command_prefix="/",
 intents=intents,help_command=PrettyHelp(color = discord.Color.random(),
                                         no_category = "Developer commands."))
 
 @bot.event
 async def on_ready():
-    print("Bot is ready.")
-
+    print("Bot is online")
+    try:
+        synched = await bot.tree.sync()
+        print(f'Synched {len(synched)} command(s)')
+    
+    except Exception as e:
+        print(e)
 
 @bot.command()
 async def ping(ctx):
