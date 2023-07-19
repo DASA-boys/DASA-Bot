@@ -3,8 +3,9 @@ from connectRankDB import connectDB
 import discord
 from discord.ext import commands
 from discord.ui import *
+import asyncio
 db = connectDB()
-
+import Paginator
 class DASACommands(commands.Cog):
 
     def __init__(self, bot):
@@ -124,6 +125,49 @@ class DASACommands(commands.Cog):
 
         delete.callback = delete_callback
         dms.callback = dms_callback
+        await asyncio.sleep(5)
+        await ctx.message.delete()
+
+    @commands.command()
+    async def chance(self,ctx,*, input_str: str):
+        values = input_str.split()
+        embed = None
+        rank, branch, ciwg = None, None, None
+        for arg in values:
+            if arg.isnumeric():
+                rank = arg
+            elif arg.isalpha():
+                if len(arg) in [2, 3]:
+                    branch = arg
+                elif arg.lower() in ['y', 'n']:
+                    ciwg = arg
+        ciwg = True if ciwg == 'y' else False
+        if branch is not None:
+            cutoffs, colleges = db.reverse_engine(rank, ciwg, branch)
+            print(cutoffs, colleges)
+            embed = discord.Embed(
+                title="Chances based off of your JEE(Main) CRL-Rank",
+                color=discord.Color.random(),
+                description=f"Closing ranks for {branch.upper()}{'' if not ciwg else '(CIWG)'}")
+            for i in range(10):
+                embed.add_field(name = f"{i+1}. {colleges[i]}", value = f"JEE CLOSING RANK: {cutoffs[i]}", inline = True)
+            await ctx.send(embed=embed, delete_after=120)
+        else:
+            cutoffs, colleges, branches = db.reverse_engine(rank, ciwg, branch)
+            dic = {}  # {college : [[branch, cutoff], [branch, cutoff]}
+            for i in range(len(colleges)):
+                if colleges[i] not in list(dic.keys()):
+                    dic[colleges[i]] = [[branches[i], cutoffs[i]]]
+                else:
+                    dic[colleges[i]] += [[branches[i], cutoffs[i]]]
+            pages = []
+            for i in dic:
+                embed = discord.Embed(title = f"Closing Ranks for {i} in all branches {'(UNDER CIWG CATEGORY)' if ciwg else ''}",
+                                        color = discord.Color.random())
+                for j in dic[i]:
+                    embed.add_field(name = f"{j[0][:-1]}" if ciwg else f"{j[0]}", value = f"JEE CLOSING RANK: {j[1]}", inline = True)
+                pages.append(embed)
+            await Paginator.Simple().start(ctx, pages=pages)
 
 
 async def setup(bot):

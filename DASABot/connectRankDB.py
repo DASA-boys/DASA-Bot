@@ -68,8 +68,7 @@ class connectDB:
         current_sheet = connectDB.get_sheet(self, year, round)
         college_list = connectDB.request_college_list(self, year, round)
 
-        if college_nick in college_list: 
-            return college_nick
+        if college_nick in college_list: return college_nick
 
         for row in current_sheet:
             if college_nick in row[8]:
@@ -125,8 +124,8 @@ class connectDB:
             ranks.append([branch, st])
         return ranks
     #function to return 3 lists of colleges based on user's CRL and cutoff
-    def analysis(self, rank: int, ciwg: bool, branch: str = None):
-        current_sheet = connectDB.get_sheet(self, "2022", "3")
+    """def analysis(self, rank: int, ciwg: bool, branch: str = None):
+        current_sheet = connectDB.get_sheet(self, "2022", "1")
         highclg = []
         midclg = []
         lowclg = []
@@ -149,10 +148,49 @@ class connectDB:
             midclg = [clg for clg in midclg if branch.lower() in clg.lower()]
             highclg = [clg for clg in highclg if branch.lower() in clg.lower()]
 
-        return lowclg, midclg, highclg
+        return lowclg, midclg, highclg"""
 
+    def reverse_engine(self, rank: str, ciwg: bool, branch: str = None):
+        current_sheet = connectDB.get_sheet(self, "2023", "1")
+        index = None
+        if branch is not None:
+            branch = branch.upper()
+            if ciwg:
+                branch += "1"
+            cutoffs, college = [int(row[5]) for row in current_sheet if branch == row[2]], [
+                row[1] for row in current_sheet if branch == row[2]]
 
+            cutoffscopy, collegescopy = list(cutoffs), list(college)
+            for cutoff in cutoffscopy:
+                if int(rank) - int(cutoff) > 10000:
+                    index = cutoffscopy.index(cutoff)
+                    cutoffs.remove(cutoff)
+                    college.remove(collegescopy[index])
 
+            sorted_lists = sorted(zip(cutoffs, college))
+            scutoffs, scollege = zip(*sorted_lists)
+            return scutoffs, scollege
+        else:
+            if ciwg:
+                branches = [row[2] for row in current_sheet if row[9] == '1']
+                cutoffs, college = [int(row[5]) for row in current_sheet if row[9] == '1'], [
+                    row[1] for row in current_sheet if row[9] == '1']
+            else:
+                branches = [row[2] for row in current_sheet if row[9] == '0']
+                cutoffs, college = [int(row[5]) for row in current_sheet if row[9] == '0'], [
+                    row[1] for row in current_sheet if row[9] == '0']
+
+            cutoffscopy, collegescopy, branchescopy = list(
+                cutoffs), list(college), list(branches)
+            for cutoff in cutoffscopy:
+                if int(rank) - int(cutoff) > 10000:
+                    index = cutoffscopy.index(cutoff)
+                    cutoffs.remove(cutoff)
+                    college.remove(collegescopy[index])
+                    branches.remove(branchescopy[index])
+            sorted_lists = sorted(zip(cutoffs, college, branches))
+            scutoff, scollege, sbranches = zip(*sorted_lists)
+            return (scutoff), (scollege), (sbranches)
     '''
     ## testing function
     def testing(self):
