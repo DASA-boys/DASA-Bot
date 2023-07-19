@@ -15,6 +15,10 @@ class dasa_res(commands.Cog):
     @commands.command()
     @commands.has_permissions(administrator=True)
     async def resupd(self, ctx, year = None):
+        if ctx.guild.id != 777887744151912459: 
+            await ctx.send("Command cannot be used in this guild.")
+            return
+
         if year == None:
             await ctx.send("Specify the year.")
             return
