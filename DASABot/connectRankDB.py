@@ -68,7 +68,7 @@ class connectDB:
         current_sheet = connectDB.get_sheet(self, year, round)
         college_list = connectDB.request_college_list(self, year, round)
 
-        if college_nick in college_list: 
+        if college_nick in college_list:
             return college_nick
 
         for row in current_sheet:
@@ -151,8 +151,6 @@ class connectDB:
 
         return lowclg, midclg, highclg
 
-
-
     '''
     ## testing function
     def testing(self):
@@ -226,6 +224,49 @@ class connectDB:
             print("Invalid input please try again")
     '''
 
+    def reverse_engine(self, rank: str, ciwg: bool, branch: str = None):
+        current_sheet = connectDB.get_sheet(self, "2023", "1")
+        index = None
+        if branch is not None:
+            branch = branch.upper()
+            if ciwg:
+                branch += "1"
+            cutoffs, college = [int(row[5]) for row in current_sheet if branch == row[2]], [
+                row[1] for row in current_sheet if branch == row[2]]
+
+            cutoffscopy = list(cutoffs)
+            indices_to_remove = []
+            for cutoff in cutoffscopy:
+                if int(rank) - int(cutoff) > 10000:
+                    indices_to_remove.append(cutoffs.index(cutoff))
+            for index in sorted(indices_to_remove, reverse=True):
+                del cutoffs[index]
+                del college[index]
+            sorted_lists = sorted(zip(cutoffs, college))
+            scutoffs, scollege = zip(*sorted_lists)
+            return scutoffs, scollege
+        else:
+            if ciwg:
+                branches = [row[2] for row in current_sheet if row[9] == '1']
+                cutoffs, college = [int(row[5]) for row in current_sheet if row[9] == '1'], [
+                    row[1] for row in current_sheet if row[9] == '1']
+            else:
+                branches = [row[2] for row in current_sheet if row[9] == '0']
+                cutoffs, college = [int(row[5]) for row in current_sheet if row[9] == '0'], [
+                    row[1] for row in current_sheet if row[9] == '0']
+
+            cutoffscopy = cutoffs.copy()
+            indices_to_remove = []
+            for cutoff in cutoffscopy:
+                if int(rank) - int(cutoff) > 10000:
+                    indices_to_remove.append(cutoffs.index(cutoff))
+            for index in sorted(indices_to_remove, reverse=True):
+                del cutoffs[index]
+                del college[index]
+                del branches[index]
+            sorted_lists = sorted(zip(cutoffs, college, branches))
+            scutoff, scollege, sbranches = zip(*sorted_lists)
+            return (scutoff), (scollege), (sbranches)
 
     # initialisation function
     def __init__(self):
@@ -244,6 +285,7 @@ class connectDB:
         self.worksheet_names = [worksheet.title for worksheet in self.worksheets] # gets names of worksheets
 
         self.worksheet_data = [worksheet.get_all_values() for worksheet in self.worksheets]
+
 
 
 obj = connectDB()
