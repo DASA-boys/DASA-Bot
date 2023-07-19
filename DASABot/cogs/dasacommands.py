@@ -1,7 +1,6 @@
 import connectRankDB
 from connectRankDB import connectDB
 import discord
-from discord import app_commands
 from discord.ext import commands
 from discord.ui import *
 db = connectDB()
@@ -16,7 +15,7 @@ class DASACommands(commands.Cog):
     async def on_ready(self):
         print("DASA COMMANDS cog loaded")
 
-    @commands.command()
+    @commands.hybrid_command()
     async def cutoff(self, ctx,*,  input_str:str):
         embed = None
         """usage : ?cutoff college year round ciwg(y/n) [branch]

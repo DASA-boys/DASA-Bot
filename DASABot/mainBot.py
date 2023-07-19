@@ -29,9 +29,9 @@ async def on_ready():
     except Exception as e:
         print(e)
 
-@bot.command()
-async def ping(ctx):
-    await ctx.send(f'Pong! {round(bot.latency * 1000)}ms')
+@bot.tree.command(name = 'ping')
+async def ping(interaction: discord.Interaction):
+    await interaction.response.send_message(f'Pong! {round(bot.latency * 1000)}ms')
 
 @bot.command(description='Reload a cog.')
 @commands.is_owner()
