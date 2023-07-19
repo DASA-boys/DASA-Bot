@@ -16,7 +16,12 @@ class DASACommands(commands.Cog):
         print("DASA COMMANDS cog loaded")
 
     @commands.hybrid_command()
-    async def cutoff(self, ctx,*,  input_str:str):
+    async def cutoff(self, ctx,
+                        college: str = commands.parameter(description = "example: nitc, nitt, nitk, nits, nsut, (use quotes for split names)"),
+                        year: str = commands.parameter(description = "example: 2021, 2022"), ciwg: str= commands.parameter(description = "example: y, n, Y, N"),
+                        round: str= commands.parameter(description = "example: 1, 2, 3"),
+                        branch: str = commands.parameter(default = None,
+                                                            description = "example: CSE, ECE, EEE, MEC")):
         embed = None
         """usage : ?cutoff college year round ciwg(y/n) [branch]
         NOTE: arguments need not be in same order
@@ -31,26 +36,24 @@ class DASACommands(commands.Cog):
         view.add_item(dms)
         view.add_item(delete)
 
-        values = input_str.split()
-        college, year, round, branch, ciwg = "", None, None, None, None
-        for arg in values:
-            if arg.isnumeric():
-                if int(arg) in [2021, 2022, 2023]:
-                    year = arg
-                elif int(arg) in [1, 2, 3]:
-                    round = arg
-            elif arg.isalpha():
-                if len(arg) > 3 or arg == "nit":
-                    college += f"{arg} "
-                elif len(arg) in [2,3]:
-                    branch = arg
-                elif arg in ['y', 'n']:
-                    ciwg = arg
-        college = college[:-1]
+        """Get cutoffs.
+                usage : ?cutoff <college>, <year>, <ciwg>, <round> [,branchcode]"""
+        college = college.lower()
+        if year not in ['2021', '2022', '2023']:  # checks if the year is given as 2021 or 2022
+            return await ctx.send("Invalid year.")
+
+        if int(round) not in [1, 2, 3]:  # checks if the round is 1,2 or 3
+            await ctx.send("Invalid round.")
+            return
+
+        if ciwg.lower() not in "yn":
+            await ctx.send("Invalid Category. Please enter y/n for ciwgc status")
+
         try:
             college = db.nick_to_college(str(year), str(round), str(college))
         except:
             return await ctx.send("Invalid college name.")
+
         ciwg = True if ciwg == 'y' else False
         branch_list = db.request_branch_list(year, round, college, ciwg)
         if branch is not None:
