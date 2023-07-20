@@ -20,6 +20,15 @@ Password: Discord@123
 
 ## Code Breakdown:
 
+### mainBot.py
+1. This script is the main file for the bot.
+2. It has the commands that help in reloading cogs `def reload()` as well as shut the bot `def shut()`.
+
+### cutoff.py
+1. This script is an command extension file containing the commands relating to DASA.
+- `cutoff` - This command retrieves the cutoffs for a given college taken from a given year, round, branch and category. If branch is not given, cutoffs for all the      branches from the given college will be displayed.  
+- `analyze` - This command returns the colleges whose closing rank cutoffs are closest to the rank inputed by the user. If branch is not givem, cutoffs for all the branches from all the colleges within a close range(i.e. 10000 higher than the given rank) of the given rank is returned.  
+
 ### connectRankDB.py
 
 1. The script imports the necessary libraries, `gspread` for interacting with Google Sheets, as well as `os` and `pathlib` for getting filepaths etc.
