@@ -130,7 +130,7 @@ class DASACommands(commands.Cog):
         dms.callback = dms_callback
 
     @commands.hybrid_command()
-    async def analyze(self, ctx, rank:str, ciwg:str, branch:str = None):
+    async def analyse(self, ctx, rank:str, ciwg:str, branch:str = None):
         m = None
         delete = Button(label="Delete", style=discord.ButtonStyle.danger)
         dms = Button(label="Send in DMs", style=discord.ButtonStyle.green)
