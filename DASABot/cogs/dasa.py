@@ -25,7 +25,7 @@ class DASACommands(commands.Cog):
                                                             description = "example: CSE, ECE, EEE, MEC")):
         embed = None
         """usage : ?cutoff college year round ciwg(y/n) [branch]
-        NOTE: arguments need not be in same order yash
+        NOTE: arguments need not be in same order
         college, ex: nitk, nitc, nitt, nsut
         year, ex: 2021, 2022, 2023
         round, ex: 1, 2, 3
