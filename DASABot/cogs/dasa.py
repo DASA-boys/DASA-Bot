@@ -141,7 +141,6 @@ class DASACommands(commands.Cog):
         ciwg = True if ciwg == 'y' else False
         if branch is not None:
             cutoffs, colleges = db.reverse_engine(rank, ciwg, branch)
-            print(cutoffs, colleges)
             embed = discord.Embed(
                 title="Chances based off of your JEE(Main) CRL-Rank",
                 color=discord.Color.random(),
