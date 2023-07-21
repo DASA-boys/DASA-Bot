@@ -48,7 +48,7 @@ class connectDB:
 
         wksdat = self.worksheet_data[sheet_index]
         return wksdat[2:]
-    
+
 
     def get_airport_stats(self, college_name):
         returnlist = []
@@ -62,7 +62,8 @@ class connectDB:
         for element in wksdat:
             if college_name in element[6]:
                 returnlist.append(element[1:6])
-        print (returnlist)
+        finallist = returnlist[0]
+        return finallist
 
 
     # function to request a list of colleges for a specific year and round
