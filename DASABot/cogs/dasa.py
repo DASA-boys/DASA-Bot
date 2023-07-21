@@ -131,13 +131,14 @@ class DASACommands(commands.Cog):
 
     @commands.hybrid_command()
     async def analyse(self, ctx, rank:str, ciwg:str, branch:str = None):
+        embed = None
         m = None
         delete = Button(label="Delete", style=discord.ButtonStyle.danger)
         dms = Button(label="Send in DMs", style=discord.ButtonStyle.green)
         view = View()
         view.add_item(dms)
         view.add_item(delete)
-        embed = None
+        
         ciwg = True if ciwg == 'y' else False
         if branch is not None:
             cutoffs, colleges = db.reverse_engine(rank, ciwg, branch)
