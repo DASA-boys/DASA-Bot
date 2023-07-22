@@ -1,3 +1,0 @@
-discord.py==2.3.0a4823+g9717317c
-gspread==5.10.0
-python-dotenv==1.0.0

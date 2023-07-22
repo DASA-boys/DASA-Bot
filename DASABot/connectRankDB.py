@@ -88,7 +88,7 @@ class connectDB:
             return college_nick
 
         for row in current_sheet:
-            if college_nick in row[8]:
+            if college_nick in [n.strip() for n in row[8].split(",")]:
                 return row[1]
 
         raise ValueError("Invalid college name")
