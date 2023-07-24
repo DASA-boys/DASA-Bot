@@ -130,6 +130,67 @@ class DASACommands(commands.Cog):
         dms.callback = dms_callback
 
     @commands.hybrid_command()
+    async def airport(self, ctx,
+                    college_name: str = commands.parameter(description = "example: nitc, nitt, nitk, nits, nsut, (use quotes for split names)")):
+        embed = None
+        """usage : ?airport college 
+        college, ex: nitk, nitc, nitt, nsut
+        """
+        delete = Button(label="Delete", style=discord.ButtonStyle.danger)
+        dms = Button(label="Send in DMs", style=discord.ButtonStyle.green)
+        view = View()
+        view.add_item(dms)
+        view.add_item(delete)
+
+        college_name = college_name.lower()
+        college_list = db.request_college_list_air()
+        try:
+            college = db.nick_to_air(str(college))
+        except:
+            return await ctx.send("Invalid college name.")
+
+
+        stats = db.get_airport_stats(college_name)
+        embed = discord.Embed(
+            title=f'Cutoffs for {college_name}', color=discord.Color.random())
+        embed.set_thumbnail(
+            url='https://dasanit.org/dasa2023/images/dasa_new.png')
+        embed.add_field(name="College name: ", value=stats[0])
+        embed.add_field(name="State: ", value=stats[1])
+        embed.add_field(
+            name="Closest Airport: ", value=stats[2])
+        embed.add_field(
+            name="Airport Code: " , value='(' + stats[3] + ')')
+        embed.add_field(
+            name="Distance of airport from college: " , value=stats[4] + 'KM')
+        embed.set_footer(text = 'This message will be automatically deleted in 120s.\nTo receive this message in your DMs, press "Send in DMs".\nTo delete this message, press "Delete".')
+        m = await ctx.send(embed=embed, delete_after=120, view = view)
+
+        async def dms_callback(interaction):
+            await self.bot.send_message(ctx.message.author, embed=embed)
+            await interaction.response.send_message("Cutoffs have been sent in your DMs.")
+
+                        
+
+        async def dms_callback(interaction):
+            if interaction.user.id == ctx.author.id:
+                dmuser = await self.bot.fetch_user(ctx.author.id)
+            else:
+                dmuser = await self.bot.fetch_user(interaction.user.id)
+            embed.remove_footer()
+            await dmuser.send(embed = embed)
+            await ctx.send("Airport details have been sent in your DMs.")
+
+        async def delete_callback(interaction):
+            if interaction.user.id == ctx.author.id:
+                await m.delete()
+
+
+        delete.callback = delete_callback
+        dms.callback = dms_callback
+
+
+    @commands.hybrid_command()
     async def analyse(self, ctx, rank:str, ciwg:str, branch:str = None):
         embed = None
         m = None

@@ -81,7 +81,7 @@ class connectDB:
             return college_nick
 
         for row in current_sheet:
-            if college_nick in [n.strip() for n in row[5].split(",")]:
+            if college_nick in [n.strip() for n in row[6].split(",")]:
                 return row[1]
 
         raise ValueError("Invalid college name")
@@ -90,6 +90,7 @@ class connectDB:
     def get_airport_stats(self, college_name):
         returnlist = []
         tempdat = connectDB.get_air_sheet(self)
+        college_name = connectDB.nick_to_air(self, college_name)
         wksdat =  tempdat[2:]
         for element in wksdat:
             if college_name in element[1]:
@@ -201,6 +202,7 @@ class connectDB:
 
     
     ## testing function
+    '''
     def testing(self):
         
         userinput= input("Please enter your selection \n1. Retrieve college rankings\n2. Enter JEE Rank to determine college chances\n")
@@ -270,25 +272,16 @@ class connectDB:
                 print(row)
 
         elif userinput == "3":
-            while True:
-
-                breaker = True
-                while breaker:
-                    breaker = False
-                    try:
-                        college_nick = input("College: ")
-                        college_name = connectDB.nick_to_air(self, college_nick)
-                    except ValueError:
-                        print("Invalid college name, re-enter")
-                        breaker = True           
-
-                stats = connectDB.get_airport_stats(self, college_name)
-                print("\n\nAIRPORT STATS: \n\n")
-                for row in stats:
-                    print(row)
+            
+            college_name = input("College: ")
+            stats = connectDB.get_airport_stats(self, college_name)
+            print("\n\nAIRPORT STATS: \n\n")
+            for row in stats:
+                print(row)
 
         else:
             print("Invalid input please try again")
+    '''
 
     #Function for reverse engine
     def reverse_engine(self, rank: str, ciwg: bool, branch: str = None):
@@ -356,7 +349,7 @@ class connectDB:
 
 
 obj = connectDB()
-obj.testing()
+#obj.testing()
 #changed so that branch input isnt case sensitive
 #enabled user to enter nicknames of college to pull out data from dbs
 
