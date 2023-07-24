@@ -145,7 +145,7 @@ class DASACommands(commands.Cog):
         college_name = college_name.lower()
         college_list = db.request_college_list_air()
         try:
-            college = db.nick_to_air(str(college))
+            college_name = db.nick_to_air(college_name)
         except:
             return await ctx.send("Invalid college name.")
 
