@@ -1,10 +1,19 @@
+import os
+from dotenv import load_dotenv
+
 import discord
 from discord.ext import commands
 
 class dasa_res(commands.Cog):
-
+    DASA_GUILD_ID = int(os.getenv("DASA_GUILD_ID"))
+    DASA_RES_CHANNEL_ID = int(os.getenv("DASA_RES_CHANNEL_ID"))
+    
     def __init__(self, bot):
         self.bot = bot
+        load_dotenv()
+
+        self.DASA_GUILD_ID = int(os.getenv("DASA_GUILD_ID"))
+        self.DASA_RES_CHANNEL_ID = int(os.getenv("DASA_RES_CHANNEL_ID"))
 
 
     @commands.Cog.listener()
@@ -15,7 +24,7 @@ class dasa_res(commands.Cog):
     @commands.command()
     @commands.has_permissions(administrator=True)
     async def resupd(self, ctx, year = None):
-        if ctx.guild.id != 777887744151912459: 
+        if ctx.guild.id != self.DASA_GUILD_ID: 
             await ctx.send("Command cannot be used in this guild.")
             return
 
@@ -23,7 +32,7 @@ class dasa_res(commands.Cog):
             await ctx.send("Specify the year.")
             return
 
-        dasa_res_channel = self.bot.get_channel(1027485716260868156)
+        dasa_res_channel = self.bot.get_channel(self.DASA_RES_CHANNEL_ID)
 
         year_role_id = {
             "DASA 2021" : 812198929671389184,
@@ -65,7 +74,7 @@ class dasa_res(commands.Cog):
             'DTU'                   : 917466773236875355, 
             'MIT Manipal'           : 932870289577111642, 
             'Anna University'       : 1131213158783139891,
-            'Jalandhar University'  : 1126177447939932350,
+            'Jadavpur University'   : 1126177447939932350,
 
             #'IIT'            : (1030905894629810208, 985959694147416085, 996690379346812959)
         }
@@ -89,9 +98,6 @@ class dasa_res(commands.Cog):
             role_id = role_ids[role]
             mems = ctx.guild.get_role(role_id).members
 
-            #print(role)
-            #print(role_id)
-
             cur = ""
             for member in mems:
                 if member in year_mems:
@@ -108,7 +114,9 @@ class dasa_res(commands.Cog):
             await message.edit(content = output)
 
         else: 
-            await dasa_res_channel.send(output)
+            message = await dasa_res_channel.send(".")
+            await message.edit(content = output)
+
 
         await ctx.send("updated")
 
