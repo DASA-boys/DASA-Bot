@@ -90,8 +90,7 @@ class connectDB:
         tempdat = connectDB.get_air_sheet(self)
         college_name = connectDB.nick_to_air(self, college_name)
         #print(college_name)
-        wksdat = tempdat
-        for element in wksdat:
+        for element in tempdat:
             #print(element)
             if college_name.lower() == element[1].lower():
                 returnlist.append(element[1:6])
