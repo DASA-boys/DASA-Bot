@@ -92,7 +92,7 @@ class connectDB:
         tempdat = connectDB.get_air_sheet(self)
         college_name = connectDB.nick_to_air(self, college_name)
         #print(college_name)
-        wksdat = tempdat[2:]
+        wksdat = tempdat
         for element in wksdat:
             #print(element)
             if college_name.lower() == element[1].lower():
@@ -124,6 +124,7 @@ class connectDB:
         for row in current_sheet:
             if college_nick in [n.strip() for n in row[8].split(",")]:
                 return row[1]
+
 
         raise ValueError("Invalid college name")
         return

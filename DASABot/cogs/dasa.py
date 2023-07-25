@@ -135,7 +135,7 @@ class DASACommands(commands.Cog):
     async def cutoff_error(self, ctx, error):
         if isinstance(error, commands.CommandOnCooldown):
             em = discord.Embed(title=f"Command on Cooldown!",
-                                description=f"Try again in {error.retry_after:.11ff}s.", color=discord.Color.random())
+                                description=f"Try again in {error.retry_after:.1f}s.", color=discord.Color.random())
             em.set_thumbnail(
                 url="https://dasanit.org/dasa2023/images/dasa_new.png'")
             await ctx.send(embed=em)
@@ -203,7 +203,7 @@ class DASACommands(commands.Cog):
     async def airport_error(self, ctx, error):
         if isinstance(error, commands.CommandOnCooldown):
             em = discord.Embed(title=f"Command on Cooldown!",
-                            description=f"Try again in {error.retry_after:.11ff}s.", color=discord.Color.random())
+                            description=f"Try again in {error.retry_after:.2f}s.", color=discord.Color.random())
             em.set_thumbnail(
                 url="https://dasanit.org/dasa2023/images/dasa_new.png'")
             await ctx.send(embed=em)
@@ -280,7 +280,7 @@ class DASACommands(commands.Cog):
     async def analyse_error(self, ctx, error):
         if isinstance(error, commands.CommandOnCooldown):
             em = discord.Embed(title=f"Command on Cooldown!",
-                                description=f"Try again in {error.retry_after:.11ff}s.", color=discord.Color.random())
+                                description=f"Try again in {error.retry_after:.2f}s.", color=discord.Color.random())
             em.set_thumbnail(
                 url="https://dasanit.org/dasa2023/images/dasa_new.png'")
             await ctx.send(embed=em)
