@@ -31,7 +31,7 @@ class connectDB:
 
 
     # constants, try not to change
-    DB_KEY_FILENAME = "DASABot\db_key.json"
+    DB_KEY_FILENAME = "DASABot/db_key.json"
     RANK_SPREADSHEET_KEY = os.getenv("RANK_SPREADSHEET_KEY")
 
 
@@ -71,33 +71,34 @@ class connectDB:
             if row[1] not in college_list:
                 college_list.append(row[1])
 
-        return college_list[2:]    
+        return college_list[2:]
 
-    def nick_to_air(self, college_nick : str):
+    def nick_to_air(self, college_nick: str):
         current_sheet = connectDB.get_air_sheet(self)
         college_list = connectDB.request_college_list_air(self)
-
-        if college_nick in college_list:
-            return college_nick
+        # if user inputs the full name of a uni ("Indian Institute of Engineering Science and Technology, Shibpur")
+        if college_nick.lower() in [col.lower() for col in college_list]:
+            return college_nick.lower()
 
         for row in current_sheet:
-            if college_nick in [n.strip() for n in row[6].split(",")]:
-                return row[1]
-
-        raise ValueError("Invalid college name")
-        return
+            # if user inputs the short form of a uni ("iiest")
+            aliases = [ali.lower() for ali in row[6].split(', ')]
+            #print(aliases)
+            if college_nick.lower() in aliases:
+                return row[1]  # will return the full name of uni
 
     def get_airport_stats(self, college_name):
         returnlist = []
         tempdat = connectDB.get_air_sheet(self)
         college_name = connectDB.nick_to_air(self, college_name)
-        wksdat =  tempdat[2:]
+        #print(college_name)
+        wksdat = tempdat[2:]
         for element in wksdat:
-            if college_name in element[1]:
+            #print(element)
+            if college_name.lower() == element[1].lower():
                 returnlist.append(element[1:6])
         finallist = returnlist[0]
         return finallist
-
 
     # function to request a list of colleges for a specific year and round
     def request_college_list(self, year : str, round : str):
@@ -200,11 +201,11 @@ class connectDB:
 
         return lowclg, midclg, highclg
 
-    
+
     ## testing function
     '''
     def testing(self):
-        
+
         userinput= input("Please enter your selection \n1. Retrieve college rankings\n2. Enter JEE Rank to determine college chances\n")
         if userinput == "1":
             while True:
@@ -272,7 +273,7 @@ class connectDB:
                 print(row)
 
         elif userinput == "3":
-            
+
             college_name = input("College: ")
             stats = connectDB.get_airport_stats(self, college_name)
             print("\n\nAIRPORT STATS: \n\n")

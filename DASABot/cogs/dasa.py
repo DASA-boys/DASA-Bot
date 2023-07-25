@@ -133,7 +133,7 @@ class DASACommands(commands.Cog):
     async def airport(self, ctx,
                     college_name: str = commands.parameter(description = "example: nitc, nitt, nitk, nits, nsut, (use quotes for split names)")):
         embed = None
-        """usage : ?airport college 
+        """usage : ?airport college
         college, ex: nitk, nitc, nitt, nsut
         """
         delete = Button(label="Delete", style=discord.ButtonStyle.danger)
@@ -143,16 +143,15 @@ class DASACommands(commands.Cog):
         view.add_item(delete)
 
         college_name = college_name.lower()
-        college_list = db.request_college_list_air()
         try:
-            college_name = db.nick_to_air(college_name)
+            stats = db.get_airport_stats(college_name)
         except:
             return await ctx.send("Invalid college name.")
 
 
-        stats = db.get_airport_stats(college_name)
+
         embed = discord.Embed(
-            title=f'Cutoffs for {college_name}', color=discord.Color.random())
+            title=f'Airport closest to {stats[0]}', color=discord.Color.random())
         embed.set_thumbnail(
             url='https://dasanit.org/dasa2023/images/dasa_new.png')
         embed.add_field(name="College name: ", value=stats[0])
@@ -169,8 +168,6 @@ class DASACommands(commands.Cog):
         async def dms_callback(interaction):
             await self.bot.send_message(ctx.message.author, embed=embed)
             await interaction.response.send_message("Cutoffs have been sent in your DMs.")
-
-                        
 
         async def dms_callback(interaction):
             if interaction.user.id == ctx.author.id:
@@ -199,7 +196,7 @@ class DASACommands(commands.Cog):
         view = View()
         view.add_item(dms)
         view.add_item(delete)
-        
+
         ciwg = True if ciwg == 'y' else False
         if branch is not None:
             cutoffs, colleges = db.reverse_engine(rank, ciwg, branch)
