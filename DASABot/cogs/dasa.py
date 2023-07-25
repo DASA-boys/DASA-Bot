@@ -3,6 +3,7 @@ from connectRankDB import connectDB
 import discord
 from discord.ext import commands
 from discord.ui import *
+from discord.ext.commands import BucketType
 import Paginator, asyncio
 db = connectDB()
 
@@ -17,7 +18,8 @@ class DASACommands(commands.Cog):
         print("DASA COMMANDS cog loaded")
 
     @commands.hybrid_command()
-    async def cutoff(self, ctx,
+    @commands.cooldown(1, 10, type=BucketType.user)
+    async def cutoff(self, ctx:discord.Interaction,
                         college: str = commands.parameter(description = "example: nitc, nitt, nitk, nits, nsut, (use quotes for split names)"),
                         year: str = commands.parameter(description = "example: 2021, 2022"), ciwg: str= commands.parameter(description = "example: y, n, Y, N"),
                         round: str= commands.parameter(description = "example: 1, 2, 3"),
@@ -129,7 +131,18 @@ class DASACommands(commands.Cog):
         delete.callback = delete_callback
         dms.callback = dms_callback
 
+    @cutoff.error
+    async def cutoff_error(self, ctx, error):
+        if isinstance(error, commands.CommandOnCooldown):
+            em = discord.Embed(title=f"Command on Cooldown!",
+                                description=f"Try again in {error.retry_after:.11ff}s.", color=discord.Color.random())
+            em.set_thumbnail(
+                url="https://dasanit.org/dasa2023/images/dasa_new.png'")
+            await ctx.send(embed=em)
+
+
     @commands.hybrid_command()
+    @commands.cooldown(1, 10, type=BucketType.user)
     async def airport(self, ctx,
                     college_name: str = commands.parameter(description = "example: nitc, nitt, nitk, nits, nsut, (use quotes for split names)")):
         embed = None
@@ -186,8 +199,17 @@ class DASACommands(commands.Cog):
         delete.callback = delete_callback
         dms.callback = dms_callback
 
+    @airport.error
+    async def airport_error(self, ctx, error):
+        if isinstance(error, commands.CommandOnCooldown):
+            em = discord.Embed(title=f"Command on Cooldown!",
+                            description=f"Try again in {error.retry_after:.11ff}s.", color=discord.Color.random())
+            em.set_thumbnail(
+                url="https://dasanit.org/dasa2023/images/dasa_new.png'")
+            await ctx.send(embed=em)
 
     @commands.hybrid_command()
+    @commands.cooldown(1, 10, type=BucketType.user)
     async def analyse(self, ctx, rank:str, ciwg:str, branch:str = None):
         embed = None
         m = None
@@ -254,6 +276,14 @@ class DASACommands(commands.Cog):
         await asyncio.sleep(5)
         await ctx.message.delete()
 
+    @analyse.error
+    async def analyse_error(self, ctx, error):
+        if isinstance(error, commands.CommandOnCooldown):
+            em = discord.Embed(title=f"Command on Cooldown!",
+                                description=f"Try again in {error.retry_after:.11ff}s.", color=discord.Color.random())
+            em.set_thumbnail(
+                url="https://dasanit.org/dasa2023/images/dasa_new.png'")
+            await ctx.send(embed=em)
 
 async def setup(bot):
     await bot.add_cog(DASACommands(bot))
