@@ -1,11 +1,10 @@
 import os
 from dotenv import load_dotenv
 from connectRankDB import connectDB
-
-import discord
 from discord.ext import commands
 from discord import app_commands
 import asyncio
+import discord
 
 load_dotenv()
 
@@ -16,49 +15,6 @@ intents.message_content = True
 bot = commands.Bot(command_prefix="/",
                     intents=intents)
 bot.remove_command('help')
-
-@bot.group(invoke_without_command = True)
-async def help(ctx):
-    em = discord.Embed(title = "DASA Bot Commands", description = "use /help <command> for information about commands", color = discord.Color.random())
-    em.add_field(name='</cutoff:1131246029531004968>',
-                    value = 'college, year, ciwg, round, branch(optional)',
-                    inline=False)
-    em.add_field(name='</analyse:1131969029968502918>',
-                    value='rank, ciwg, branch(optional)',
-                    inline=False)
-    em.add_field(name='</airport:1133054254203011082>',
-                    value='college',
-                    inline=False)
-    em.set_footer(text = "This message will be deleted after 1 minute.")
-    await ctx.send(embed = em, delete_after = 60)
-
-@help.command()
-async def cutoff(ctx):
-    em = discord.Embed(title='</cutoff:1131246029531004968>',
-                       description='Retrieve cutoffs for various colleges and/or branches', color=discord.Color.random())
-    em.add_field(name = "Syntax: ", value = "</cutoff:1131246029531004968> `<college> <year> <ciwg> <round> [branch]`", inline = True)
-    em.set_footer(text="This message will be deleted after 1 minute.")
-    await ctx.send(embed = em, delete_after = 60)
-
-
-@help.command()
-async def airport(ctx):
-    em = discord.Embed(
-        title='</airport:1133054254203011082>', description='Retrieves closest airport to the given college', color=discord.Color.random())
-    em.add_field(name="Syntax: ",
-                 value="</airport:1133054254203011082> `<college>`", inline=True)
-    em.set_footer(text="This message will be deleted after 1 minute.")
-    await ctx.send(embed=em, delete_after = 60)
-
-
-@help.command()
-async def analyse(ctx):
-    em = discord.Embed(
-        title='</analyse:1131969029968502918>', description='Retrieve cutoffs closes to your rank', color = discord.Color.random())
-    em.add_field(name="Syntax: ",
-                 value="</analyse:1131969029968502918> `<rank ><ciwg> [branch]`", inline=True)
-    em.set_footer(text="This message will be deleted after 1 minute.")
-    await ctx.send(embed=em, delete_after=60)
 
 @bot.event
 async def on_ready():
@@ -73,6 +29,23 @@ async def on_ready():
 @bot.tree.command(name = 'ping')
 async def ping(interaction: discord.Interaction):
     await interaction.response.send_message(f'Pong! {round(bot.latency * 1000)}ms')
+
+
+@bot.tree.command(name = 'help', description='Help for DASA Bot')
+async def help(interaction: discord.Interaction):
+    em = discord.Embed(title="DASA Bot Commands",
+                        description="use </help:1133462040997007520> <command> for information about commands", color=discord.Color.random())
+    em.add_field(name='</cutoff:1131246029531004968>',
+                    value='college, year, ciwg, round, branch(optional)',
+                    inline=False)
+    em.add_field(name='</analyse:1131969029968502918>',
+                    value='rank, ciwg, branch(optional)',
+                    inline=False)
+    em.add_field(name='</airport:1133054254203011082>',
+                    value='college',
+                    inline=False)
+    em.set_footer(text="This message will be deleted after 1 minute.")
+    await interaction.response.send_message(embed=em, delete_after=60)
 
 @bot.command(description='Reload a cog.')
 @commands.is_owner()

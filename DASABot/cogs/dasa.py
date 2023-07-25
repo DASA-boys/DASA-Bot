@@ -55,7 +55,7 @@ class DASACommands(commands.Cog):
         try:
             college = db.nick_to_college(str(year), str(round), str(college))
         except:
-            return await ctx.send("Invalid college name.")
+            return await ctx.send("Invalid Round.")
 
         ciwg = True if ciwg == 'y' else False
         branch_list = db.request_branch_list(year, round, college, ciwg)
