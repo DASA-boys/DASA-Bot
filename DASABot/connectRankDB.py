@@ -7,6 +7,7 @@ import os
 import pathlib
 from dotenv import load_dotenv
 
+#Main fuction for backend connectivity to gsheets databse
 class connectDB:
     '''
     formats:
@@ -43,10 +44,10 @@ class connectDB:
         wksdat = self.worksheet_data[sheet_index]
         return wksdat[2:]
 
-
+    # function to connect to airplane data sheet
     def get_air_sheet(self):
 
-        # try to find a worksheet for respective year and round, raises value error if not found
+        # Gets airport data sheet
         sheet_name = f'DASA_AIRPORT'
         try:
             sheet_index = self.worksheet_names.index(sheet_name)
@@ -57,10 +58,10 @@ class connectDB:
         wksdat = self.worksheet_data[sheet_index]
         return wksdat[2:]
 
-
+    #Gets college list in airport db
     def request_college_list_air(self):
 
-        current_sheet = connectDB.get_air_sheet(self)  # stores all values for current year and round
+        current_sheet = connectDB.get_air_sheet(self)  # stores all colleges for airport database pulling
 
         college_list = []
         for row in current_sheet:
@@ -69,7 +70,7 @@ class connectDB:
 
         return college_list[2:]
 
-
+    #fetches colleges from nick names given in alternate names colloum
     def nick_to_air(self, college_nick: str):
         current_sheet = connectDB.get_air_sheet(self)
         college_list = connectDB.request_college_list_air(self)
@@ -82,15 +83,16 @@ class connectDB:
             aliases = [ali.lower() for ali in row[6].split(', ')]
             #print(aliases)
             if college_nick.lower() in aliases:
-                return row[1]  # will return the full name of uni
+                return row[1]  # will return the full name of the university
 
-
+    #Gets the final stats of the airport by fetching exact rows, and correct index thru college name
     def get_airport_stats(self, college_name):
         returnlist = []
         tempdat = connectDB.get_air_sheet(self)
         college_name = connectDB.nick_to_air(self, college_name)
         #print(college_name)
-        for element in tempdat:
+        wksdat = tempdat[2:]
+        for element in wksdat:
             #print(element)
             if college_name.lower() == element[1].lower():
                 returnlist.append(element[1:6])
@@ -161,7 +163,7 @@ class connectDB:
 
             return row[4:8] # jee_or, jee_cr, dasa_or, dasa_cr
 
-
+    #function used to fetch stats for all branches
     def get_statistics_for_all(self, year: str, round: str, college_name: str, ciwg: bool):
         current_sheet = connectDB.get_sheet(self, year, round)
         branch_list = connectDB.request_branch_list(self, year, round, college_name, ciwg)
@@ -175,7 +177,7 @@ class connectDB:
             ranks.append([branch, st])
         return ranks
 
-
+    #Outdated version of reverse engine
     #function to return 3 lists of colleges based on user's CRL and cutoff
     def analysis(self, rank: int, ciwg: bool, branch: str = None):
         current_sheet = connectDB.get_sheet(self, "2022", "3")
@@ -204,7 +206,7 @@ class connectDB:
         return lowclg, midclg, highclg
 
 
-    ## testing function
+    ## testing function remove comment out when u want to test in terminal and run connectRankDB.py
     '''
     def testing(self):
 
@@ -327,6 +329,8 @@ class connectDB:
                  del cutoffs[index]
                  del college[index]
                  del branches[index]
+
+            #sorts all the colleges into one lsit
              sorted_lists = sorted(zip(cutoffs, college, branches))
              scutoff, scollege, sbranches = zip(*sorted_lists)
              return (scutoff), (scollege), (sbranches)
@@ -352,3 +356,5 @@ class connectDB:
 
 
 obj = connectDB()
+#Uncomment next line for testing
+#obj.testing()
