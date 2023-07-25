@@ -8,11 +8,7 @@ gspread - `pip install gspread`
 dotenv - `pip install python-dotenv`  
 discord.py - `pip install discord.py`  
 discord.py-pagination - `pip install discord.py-pagination`  
-pretty-help - `pip install discord-pretty-help`  
-    
-### Account details for the Google Sheets:  
-ID: dasabot1@gmail.com  
-Password: Discord@123  
+pretty-help - `pip install discord-pretty-help`   
 
 ---
 
