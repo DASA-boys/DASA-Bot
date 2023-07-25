@@ -12,6 +12,7 @@ BOT_TOKEN = os.getenv("BOT_TOKEN")
 
 intents = discord.Intents.all()
 intents.message_content = True
+intents.presences = True
 bot = commands.Bot(command_prefix="/",
                     intents=intents)
 bot.remove_command('help')
@@ -22,7 +23,7 @@ async def on_ready():
     try:
         synched = await bot.tree.sync()
         print(f'Synched {len(synched)} command(s)')
-
+        await bot.change_presence(status=discord.Status.do_not_disturb, activity=discord.Game('/help'))
     except Exception as e:
         print(e)
 
@@ -55,6 +56,12 @@ async def reload(ctx, extension):
         await ctx.send(f'`{extension}` `has been reloaded.`')
     except:
         await ctx.send("`Invalid module.`")
+
+@bot.tree.command()
+@commands.is_owner()
+async def status(ctx:discord.Interaction, stats:str):
+    await bot.change_presence(status=discord.Status.do_not_disturb, activity=discord.Game(stats))
+    await ctx.response.send_message('Status changed')
 
 @bot.command(description='Turns off the bot.')
 @commands.is_owner()
