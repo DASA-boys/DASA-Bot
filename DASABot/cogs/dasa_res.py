@@ -120,6 +120,22 @@ class dasa_res(commands.Cog):
 
         await ctx.send("updated")
 
+    #Legacy bot announcement
+    @commands.command()
+    @commands.has_permissions(administrator=True)
+    async def online(self, ctx, year = None):
+        if ctx.guild.id != 1123237875941654659: 
+            await ctx.send("Command cannot be used in this guild.")
+            return
+
+        dasa_res_channel = self.bot.get_channel(1133509381116399616)
+
+        output = self.bot.get_message(1133487304250495086)
+
+        await dasa_res_channel.send(output)
+
+        await ctx.send("updated")
+
 
 async def setup(bot):
     await bot.add_cog(dasa_res(bot))
