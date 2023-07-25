@@ -1,5 +1,11 @@
 _amol is **very** hot_
 
+###Contributors
+<a href="https://github.com/DASA-boys/DASA-Bot/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=DASA-boys/DASA-Bot" />
+</a>
+
+
 ### Following are the required pre-requisites:
 The following libraries can also be found in `requirements.txt` by running the following command:  
 `pip install -r requirements.txt`
