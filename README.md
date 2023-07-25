@@ -1,6 +1,6 @@
 _amol is **very** hot_
 
-###Contributors
+### Contributors:
 <a href="https://github.com/DASA-boys/DASA-Bot/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=DASA-boys/DASA-Bot" />
 </a>
