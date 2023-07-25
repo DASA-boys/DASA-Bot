@@ -23,12 +23,6 @@ class connectDB:
 
     '''
 
-    '''
-
-    TO DO:
-
-    '''
-
 
     # constants, try not to change
     DB_KEY_FILENAME = "DASABot/db_key.json"
@@ -49,6 +43,7 @@ class connectDB:
         wksdat = self.worksheet_data[sheet_index]
         return wksdat[2:]
 
+
     def get_air_sheet(self):
 
         # try to find a worksheet for respective year and round, raises value error if not found
@@ -62,6 +57,7 @@ class connectDB:
         wksdat = self.worksheet_data[sheet_index]
         return wksdat[2:]
 
+
     def request_college_list_air(self):
 
         current_sheet = connectDB.get_air_sheet(self)  # stores all values for current year and round
@@ -72,6 +68,7 @@ class connectDB:
                 college_list.append(row[1])
 
         return college_list[2:]
+
 
     def nick_to_air(self, college_nick: str):
         current_sheet = connectDB.get_air_sheet(self)
@@ -87,6 +84,7 @@ class connectDB:
             if college_nick.lower() in aliases:
                 return row[1]  # will return the full name of uni
 
+
     def get_airport_stats(self, college_name):
         returnlist = []
         tempdat = connectDB.get_air_sheet(self)
@@ -99,6 +97,7 @@ class connectDB:
                 returnlist.append(element[1:6])
         finallist = returnlist[0]
         return finallist
+
 
     # function to request a list of colleges for a specific year and round
     def request_college_list(self, year : str, round : str):
@@ -163,6 +162,7 @@ class connectDB:
 
             return row[4:8] # jee_or, jee_cr, dasa_or, dasa_cr
 
+
     def get_statistics_for_all(self, year: str, round: str, college_name: str, ciwg: bool):
         current_sheet = connectDB.get_sheet(self, year, round)
         branch_list = connectDB.request_branch_list(self, year, round, college_name, ciwg)
@@ -175,6 +175,8 @@ class connectDB:
             st = connectDB.get_statistics(self, year, round, college_name, branch, ciwg)
             ranks.append([branch, st])
         return ranks
+
+
     #function to return 3 lists of colleges based on user's CRL and cutoff
     def analysis(self, rank: int, ciwg: bool, branch: str = None):
         current_sheet = connectDB.get_sheet(self, "2022", "3")
@@ -351,12 +353,3 @@ class connectDB:
 
 
 obj = connectDB()
-#obj.testing()
-#changed so that branch input isnt case sensitive
-#enabled user to enter nicknames of college to pull out data from dbs
-
-#Changed so that getsheet() only returns values from row two onwards so that rankings data type can be changed from str to int for relational executions (omits headers of db)
-#Implemented analysis() to return 3 lists, each list holding college name, branch and round 3 cutoff of 2022 of colleges based on the difference of user inputted CRL and round 3 cutoff
-#Analysis takes in 2 arguments, rank and ciwg status but ciwg is still non functional. Arguments passed for get_sheet() are hard-coded onto analysis(), ie; year 2022 and round 3
-#Edited testing() to allow user to choose between two functions, one forward engine and one reverse engine
-#testing webhook again
