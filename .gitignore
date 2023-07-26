@@ -1,5 +1,0 @@
-
-.env
-*.pyc
-DASABot/__pycache__/connectRankDB.cpython-39.pyc
-.DS_Store
