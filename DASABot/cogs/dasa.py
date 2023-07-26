@@ -70,17 +70,17 @@ class DASACommands(commands.Cog):
                 year, round, college, branch.upper(), ciwg)
             embed = discord.Embed(
                 title=f'Cutoffs for {college}',
-                            description=f'Course: {branch[:-1]} (CIWG)\n Round {round}({year})' if ciwg else f'Course: {branch.upper()}\n Round {round}',
+                description=f'Course: {stats[0]} (CIWG)\nBranch Code: {branch.upper()}\nRound {round}({year})' if ciwg else f'Course: {branch.upper()}\n Round {round}',
                             color=discord.Color.random())
             embed.set_thumbnail(
                 url='https://dasanit.org/dasa2023/images/dasa_new.png')
-            embed.add_field(name="JEE Opening Rank: ", value=stats[0])
-            embed.add_field(name="JEE Closing Rank: ", value=stats[1])
+            embed.add_field(name="JEE Opening Rank: ", value=stats[1])
+            embed.add_field(name="JEE Closing Rank: ", value=stats[2])
             embed.add_field(
-                name="DASA Opening Rank: " if not ciwg else f"CIWG Opening Rank: ", value=stats[2])
+                name="DASA Opening Rank: " if not ciwg else f"CIWG Opening Rank: ", value=stats[3])
             embed.add_field(
-                name="DASA Closing Rank: " if not ciwg else f"CIWG Closing Rank: ", value=stats[3])
-            embed.set_footer(text = 'This message will be automatically deleted in 120s.\nTo receive this message in your DMs, press "Send in DMs".\nTo delete this message, press "Delete".')
+                name="DASA Closing Rank: " if not ciwg else f"CIWG Closing Rank: ", value=stats[4])
+            embed.set_footer(text='This message will be automatically deleted in 120s.\nTo receive this message in your DMs, press "Send in DMs".\nTo delete this message, press "Delete".')
             m = await ctx.send(embed=embed, delete_after=120, view = view)
 
             async def dms_callback(interaction):
@@ -90,7 +90,7 @@ class DASACommands(commands.Cog):
         else:
             stats = db.get_statistics_for_all(year, round, college, ciwg)
             embed = discord.Embed(
-                title=f"Cutoffs for {college}", description=f"Round {round}({year})", color=discord.Color.random())
+                title=f"Cutoffs for {college}", description=f"Round {round} in ({year})\nTo get the cutoffs for a specific branch, enter </cutoff:1131246029531004968> <branch>", color=discord.Color.random())
             embed.set_thumbnail(
                 url='https://dasanit.org/dasa2023/images/dasa_new.png')
             for i in stats:
@@ -107,8 +107,8 @@ class DASACommands(commands.Cog):
                         name=f"{i[0][:-1]} (CIWG)",
                         value=f"JEE OPENING: {i[1][0]}\nJEE CLOSING: {i[1][1]}\nCIWG OPENING: {i[1][2]}\nCIWG CLOSING: {i[1][3]}",
                         inline=True)
-            embed.set_footer(
-                text='This message will be automatically deleted in 120s.\nTo receive this message in your DMs, press "Send in DMs".\nTo delete this message, press "Delete".')
+            embed.set_footer(text='This message will be automatically deleted in 120s.\nTo receive this message in your DMs, press "Send in DMs".\nTo delete this message, press "Delete".')
+
             m = await ctx.send(embed=embed, delete_after=120, view = view)
 
         async def dms_callback(interaction):
@@ -136,7 +136,6 @@ class DASACommands(commands.Cog):
             em.set_thumbnail(
                 url="https://dasanit.org/dasa2023/images/dasa_new.png'")
             await ctx.send(embed=em)
-
 
     @commands.hybrid_command()
     @commands.cooldown(1, 10, type=BucketType.user)

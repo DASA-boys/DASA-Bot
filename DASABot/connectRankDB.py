@@ -91,14 +91,12 @@ class connectDB:
         tempdat = connectDB.get_air_sheet(self)
         college_name = connectDB.nick_to_air(self, college_name)
         #print(college_name)
-        wksdat = tempdat[2:]
-        for element in wksdat:
+        for element in tempdat:
             #print(element)
             if college_name.lower() == element[1].lower():
                 returnlist.append(element[1:6])
         finallist = returnlist[0]
         return finallist
-
 
     # function to request a list of colleges for a specific year and round
     def request_college_list(self, year : str, round : str):
@@ -147,7 +145,7 @@ class connectDB:
 
 
     # functions to get rank statistics
-    def get_statistics(self, year : str, round : str, college_name : str, branch_code : str, ciwg : bool):
+    def get_statistics(self, year : str, round : str, college_name : str, branch_code : str, ciwg : bool, check:bool = False):
         current_sheet = connectDB.get_sheet(self, year, round)
         branch_list = connectDB.request_branch_list(self, year, round, college_name, ciwg)
         code = branch_code.upper()
@@ -161,7 +159,7 @@ class connectDB:
             if row[1] != college_name: continue
             if row[2] != branch_code: continue
 
-            return row[4:8] # jee_or, jee_cr, dasa_or, dasa_cr
+            return row[3:8] if not check else row[4:8]# [branch name], jee_or, jee_cr, dasa_or, dasa_cr
 
     #function used to fetch stats for all branches
     def get_statistics_for_all(self, year: str, round: str, college_name: str, ciwg: bool):
@@ -173,7 +171,7 @@ class connectDB:
                 continue
         ranks = []
         for branch in branch_list:
-            st = connectDB.get_statistics(self, year, round, college_name, branch, ciwg)
+            st = connectDB.get_statistics(self, year, round, college_name, branch, ciwg, check = True)
             ranks.append([branch, st])
         return ranks
 
