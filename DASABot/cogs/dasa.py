@@ -53,7 +53,7 @@ class DASACommands(commands.Cog):
             return await ctx.send("Invalid Round.")
 
         ciwg = True if ciwg == 'y' else False
-        branch_list = db.request_branch_list(year, round, college, ciwg)
+        branch_list = db.request_branch_list(year, round, college,  ciwg)
         if branch is not None:
             if ciwg:
                 branch = f"{branch.upper()}1"
