@@ -4,10 +4,10 @@ from dotenv import load_dotenv
 import discord
 from discord.ext import commands
 
-class dasa_res(commands.Cog):
+class DASAResults(commands.Cog):
     DASA_GUILD_ID = int(os.getenv("DASA_GUILD_ID"))
     DASA_RES_CHANNEL_ID = int(os.getenv("DASA_RES_CHANNEL_ID"))
-    
+
     def __init__(self, bot):
         self.bot = bot
         load_dotenv()
@@ -24,7 +24,7 @@ class dasa_res(commands.Cog):
     @commands.command()
     @commands.has_permissions(administrator=True)
     async def resupd(self, ctx, year = None):
-        if ctx.guild.id != self.DASA_GUILD_ID: 
+        if ctx.guild.id != self.DASA_GUILD_ID:
             await ctx.send("Command cannot be used in this guild.")
             return
 
@@ -47,32 +47,32 @@ class dasa_res(commands.Cog):
         }
 
         role_ids = {
-            'NIT Trichy'            : 917466756933644328, 
-            'NITK Surathkal'        : 917466764646973471, 
-            'NIT Warangal'          : 917466768392458251, 
-            'NIT Rourkela'          : 917467466060402758, 
-            'NIT Calicut'           : 917467011142004746, 
-            'NIT Durgapur'          : 1030829299491676212, 
-            'NIT Jamshedpur'        : 1030828050021109840, 
-            'NIT Kurukshetra'       : 1030731847484833856, 
+            'NIT Trichy'            : 917466756933644328,
+            'NITK Surathkal'        : 917466764646973471,
+            'NIT Warangal'          : 917466768392458251,
+            'NIT Rourkela'          : 917467466060402758,
+            'NIT Calicut'           : 917467011142004746,
+            'NIT Durgapur'          : 1030829299491676212,
+            'NIT Jamshedpur'        : 1030828050021109840,
+            'NIT Kurukshetra'       : 1030731847484833856,
             'NIT Jalandhar'         : 1131213217776021545,
-            'MNNIT Allahabad'       : 917466771001323540, 
-            'MNIT Jaipur'           : 1030828019482382446, 
-            'MANIT Bhopal'          : 917466771680804865, 
+            'MNNIT Allahabad'       : 917466771001323540,
+            'MNIT Jaipur'           : 1030828019482382446,
+            'MANIT Bhopal'          : 917466771680804865,
             'VNIT Nagpur'           : 1030828146242621532,
-            'SVNIT Surat'           : 1030827808060080179, 
-            'IIEST Shibpur'         : 1030731216460185682, 
-            'IIIT Allahabad'        : 966386557135253595, 
-            'IIIT Gwalior'          : 917467473710841918, 
-            'IIIT Sonepat'          : 917467473371078766, 
-            'IIIT Jabalpur'         : 1030833185258475632, 
-            'IIIT Kottayam'         : 917467472205062225, 
-            'IIIT Hyderabad'        : 917467010126983209, 
-            'IIIT Delhi'            : 917467007761403976, 
-            'BITS'                  : 917467010307346502, 
-            'NSUT'                  : 917466772892950568, 
-            'DTU'                   : 917466773236875355, 
-            'MIT Manipal'           : 932870289577111642, 
+            'SVNIT Surat'           : 1030827808060080179,
+            'IIEST Shibpur'         : 1030731216460185682,
+            'IIIT Allahabad'        : 966386557135253595,
+            'IIIT Gwalior'          : 917467473710841918,
+            'IIIT Sonepat'          : 917467473371078766,
+            'IIIT Jabalpur'         : 1030833185258475632,
+            'IIIT Kottayam'         : 917467472205062225,
+            'IIIT Hyderabad'        : 917467010126983209,
+            'IIIT Delhi'            : 917467007761403976,
+            'BITS'                  : 917467010307346502,
+            'NSUT'                  : 917466772892950568,
+            'DTU'                   : 917466773236875355,
+            'MIT Manipal'           : 932870289577111642,
             'Anna University'       : 1131213158783139891,
             'Jadavpur University'   : 1126177447939932350,
 
@@ -102,7 +102,7 @@ class dasa_res(commands.Cog):
             for member in mems:
                 if member in year_mems:
                     cur += member.mention + "\n"
-            
+
             if len(cur) > 0:
                 output += "**" + role + "**" + "\n"
                 output += cur
@@ -113,7 +113,7 @@ class dasa_res(commands.Cog):
             message = await dasa_res_channel.fetch_message(year_messsage_id[year])
             await message.edit(content = output)
 
-        else: 
+        else:
             message = await dasa_res_channel.send(".")
             await message.edit(content = output)
 
@@ -124,7 +124,7 @@ class dasa_res(commands.Cog):
     @commands.command()
     @commands.has_permissions(administrator=True)
     async def online(self, ctx, year = None):
-        if ctx.guild.id != 1123237875941654659: 
+        if ctx.guild.id != 1123237875941654659:
             await ctx.send("Command cannot be used in this guild.")
             return
 
@@ -138,4 +138,4 @@ class dasa_res(commands.Cog):
 
 
 async def setup(bot):
-    await bot.add_cog(dasa_res(bot))
+    await bot.add_cog(DASAResults(bot))
