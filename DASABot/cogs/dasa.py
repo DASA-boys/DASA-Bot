@@ -8,6 +8,12 @@ import Paginator, asyncio
 
 db = connectDB()
 
+delete = Button(label="Delete", style=discord.ButtonStyle.danger)
+dms = Button(label="Send in DMs", style=discord.ButtonStyle.green)
+view = View()
+view.add_item(dms)
+view.add_item(delete)
+
 class DASACommands(commands.Cog):
 
     def __init__(self, bot):
@@ -27,18 +33,8 @@ class DASACommands(commands.Cog):
                         branch: str = commands.parameter(default = None,
                                                             description = "example: CSE, ECE, EEE, MEC")):
         embed = None
-        """usage : ?cutoff college year round ciwg(y/n) [branch]
-        NOTE: arguments need not be in same order
-        college, ex: nitk, nitc, nitt, nsut
-        year, ex: 2021, 2022, 2023
-        round, ex: 1, 2, 3
-        ciwg, ex: y, n
-        branch(optional), ex: cse, ece, eee, mec"""
-        delete = Button(label="Delete", style=discord.ButtonStyle.danger)
-        dms = Button(label="Send in DMs", style=discord.ButtonStyle.green)
-        view = View()
-        view.add_item(dms)
-        view.add_item(delete)
+        """Displays the ranks of a specified college and branch based on the user-provided year and round"""
+
 
         """Get cutoffs.
                 usage : ?cutoff <college>, <year>, <ciwg>, <round> [,branchcode]"""
@@ -147,14 +143,9 @@ class DASACommands(commands.Cog):
     async def airport(self, ctx,
                     college_name: str = commands.parameter(description = "example: nitc, nitt, nitk, nits, nsut, (use quotes for split names)")):
         embed = None
-        """usage : ?airport college
-        college, ex: nitk, nitc, nitt, nsut
+        """Displays data about the nearest airport to the college specified by the user.
         """
-        delete = Button(label="Delete", style=discord.ButtonStyle.danger)
-        dms = Button(label="Send in DMs", style=discord.ButtonStyle.green)
-        view = View()
-        view.add_item(dms)
-        view.add_item(delete)
+
 
         college_name = college_name.lower()
         try:
@@ -212,13 +203,9 @@ class DASACommands(commands.Cog):
     @commands.hybrid_command()
     @commands.cooldown(1, 10, type=BucketType.user)
     async def analyse(self, ctx, rank:str, ciwg:str, branch:str = None):
+        """Displays a list of colleges and branches whose closing ranks closely match the user-provided rank."""
         embed = None
         m = None
-        delete = Button(label="Delete", style=discord.ButtonStyle.danger)
-        dms = Button(label="Send in DMs", style=discord.ButtonStyle.green)
-        view = View()
-        view.add_item(dms)
-        view.add_item(delete)
 
         ciwg = True if ciwg == 'y' else False
         if branch is not None:
