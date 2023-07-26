@@ -32,12 +32,10 @@ class DASACommands(commands.Cog):
                         round: str= commands.parameter(description = "example: 1, 2, 3"),
                         branch: str = commands.parameter(default = None,
                                                             description = "example: CSE, ECE, EEE, MEC")):
-        embed = None
         """Displays the ranks of a specified college and branch based on the user-provided year and round"""
 
+        embed = None
 
-        """Get cutoffs.
-                usage : ?cutoff <college>, <year>, <ciwg>, <round> [,branchcode]"""
         college = college.lower()
         if year not in ['2021', '2022', '2023']:  # checks if the year is given as 2021 or 2022
             return await ctx.send("Invalid year.")
@@ -141,10 +139,11 @@ class DASACommands(commands.Cog):
     @commands.cooldown(1, 10, type=BucketType.user)
     async def airport(self, ctx,
                     college_name: str = commands.parameter(description = "example: nitc, nitt, nitk, nits, nsut, (use quotes for split names)")):
-        embed = None
         """Displays data about the nearest airport to the college specified by the user.
         """
 
+
+        embed = None
 
         college_name = college_name.lower()
         try:
