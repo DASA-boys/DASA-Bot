@@ -49,6 +49,7 @@ async def help(interaction: discord.Interaction, command = None):
         em.set_footer(text="This message will be deleted after 1 minute.")
         await interaction.response.send_message(embed=em, delete_after=60)
 
+
 @bot.command(description='Reload a cog.')
 @commands.is_owner()
 async def reload(ctx, extension):
