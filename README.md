@@ -1,10 +1,5 @@
 _amol is **very** hot_
 
-### Contributors:
-<a href="https://github.com/DASA-boys/DASA-Bot/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=DASA-boys/DASA-Bot" />
-</a>
-
 
 ### Following are the required pre-requisites:
 The following libraries can also be found in `requirements.txt` by running the following command:  
@@ -50,3 +45,12 @@ Upon this, there are multiple methods to execute specific functions:
 - `analysis` returns three lists each containing the names of colleges filtered out by the difference between the user's CRL and college's Round 3 JEE Closing cutoff  
 
 NOTE: The code assumes the presence of the `gspread` library and a valid service account JSON file with the appropriate access to the Google Sheet.
+
+### Contributors:
+
+- [Haz3jolt](https://github.com/Haz3-jolt): Worked and assisted in front-end service using discord.py
+- [Koshy](https://github.com/koshyj8): Front-end Manager. Structured and designed front-end interface and coded discord slash commands to pull data from database
+- [Cookie](https://github.com/CookieOnCode): Back-end Manager. Established and converted DASA cutoffs to usable data in XLS format. Coded algorithms to sift through data to return requested information. 
+- [Amol](https://github.com/AmolOnGitHub): Full-Stack Developer. Assisted in mapping of DASA ranks with JEE ranks within database and laid foundation for connectrankdb
+
+
