@@ -94,7 +94,7 @@ class DASACommands(commands.Cog):
         else:
             stats = db.get_statistics_for_all(year, round, college, ciwg)
             embed = discord.Embed(
-                title=f"Cutoffs for {college}", description=f"Round {round} in ({year})\n\n**NOTE: To get the cutoffs for a specific branch, enter </cutoff:1131246029531004968> <branch>**", color=discord.Color.random())
+                title=f"Cutoffs for {college}", description=f"Round {round} in ({year})\n\n**NOTE: To get the full form and cutoffs for a specific branchcode, enter </cutoff:1131246029531004968> <branch>**", color=discord.Color.random())
             embed.set_thumbnail(
                 url='https://dasanit.org/dasa2023/images/dasa_new.png')
             for i in stats:
