@@ -8,6 +8,8 @@ import pathlib
 from dotenv import load_dotenv
 
 #Main fuction for backend connectivity to gsheets databse
+
+
 class connectDB:
     '''
     formats:
@@ -24,14 +26,13 @@ class connectDB:
 
     '''
 
-
     # constants, try not to change
     DB_KEY_FILENAME = "DASA-Bot\db_key.json"
     RANK_SPREADSHEET_KEY = os.getenv("RANK_SPREADSHEET_KEY")
 
-
     # function to get sheet data for a specific year and round
-    def get_sheet(self, year : str, round : str):
+
+    def get_sheet(self, year: str, round: str):
 
         # try to find a worksheet for respective year and round, raises value error if not found
         sheet_name = f'DASA_{year}_R{round}'
@@ -61,7 +62,8 @@ class connectDB:
     #Gets college list in airport db
     def request_college_list_air(self):
 
-        current_sheet = connectDB.get_air_sheet(self)  # stores all colleges for airport database pulling
+        # stores all colleges for airport database pulling
+        current_sheet = connectDB.get_air_sheet(self)
 
         college_list = []
         for row in current_sheet:
@@ -99,9 +101,10 @@ class connectDB:
         return finallist
 
     # function to request a list of colleges for a specific year and round
-    def request_college_list(self, year : str, round : str):
+    def request_college_list(self, year: str, round: str):
 
-        current_sheet = connectDB.get_sheet(self, year, round)  # stores all values for current year and round
+        # stores all values for current year and round
+        current_sheet = connectDB.get_sheet(self, year, round)
 
         college_list = []
         for row in current_sheet:
@@ -110,9 +113,9 @@ class connectDB:
 
         return college_list[2:]
 
-
     # function to convert a college nickname to the original college name
-    def nick_to_college(self, year : str, round : str, college_nick : str):
+
+    def nick_to_college(self, year: str, round: str, college_nick: str):
         current_sheet = connectDB.get_sheet(self, year, round)
         college_list = connectDB.request_college_list(self, year, round)
 
@@ -123,31 +126,31 @@ class connectDB:
             if college_nick in [n.strip() for n in row[8].split(",")]:
                 return row[1]
 
-
         raise ValueError("Invalid college name")
         return
 
-
     # function to request a list of branches for a specific year, round and college
-    def request_branch_list(self, year : str, round : str, college_name : str, ciwg : bool):
+
+    def request_branch_list(self, year: str, round: str, college_name: str, ciwg: bool):
         current_sheet = connectDB.get_sheet(self, year, round)
 
-        college_name = connectDB.nick_to_college(self, year, round, college_name)
+        college_name = connectDB.nick_to_college(
+            self, year, round, college_name)
         branch_list = []
         for row in current_sheet:
             if row[1] != college_name:
-                continue## skips any irrelevant college names
+                continue  # skips any irrelevant college names
             if not ciwg and row[9] == '1':
-                continue ## checks for non-ciwg
+                continue  # checks for non-ciwg
             if row[2] not in branch_list:
                 branch_list.append(row[2])
         return branch_list
 
-
     # functions to get rank statistics
-    def get_statistics(self, year : str, round : str, college_name : str, branch_code : str, ciwg : bool, check:bool = False):
+    def get_statistics(self, year: str, round: str, college_name: str, branch_code: str, ciwg: bool, check: bool = False):
         current_sheet = connectDB.get_sheet(self, year, round)
-        branch_list = connectDB.request_branch_list(self, year, round, college_name, ciwg)
+        branch_list = connectDB.request_branch_list(
+            self, year, round, college_name, ciwg)
         code = branch_code.upper()
 
         # checks if branch is valid
@@ -156,22 +159,27 @@ class connectDB:
             return
 
         for row in current_sheet:
-            if row[1] != college_name: continue
-            if row[2] != branch_code: continue
+            if row[1] != college_name:
+                continue
+            if row[2] != branch_code:
+                continue
 
-            return row[3:8] if not check else row[4:8]# [branch name], jee_or, jee_cr, dasa_or, dasa_cr
+            # [branch name], jee_or, jee_cr, dasa_or, dasa_cr
+            return row[3:8] if not check else row[4:8]
 
     #function used to fetch stats for all branches
     def get_statistics_for_all(self, year: str, round: str, college_name: str, ciwg: bool):
         current_sheet = connectDB.get_sheet(self, year, round)
-        branch_list = connectDB.request_branch_list(self, year, round, college_name, ciwg)
+        branch_list = connectDB.request_branch_list(
+            self, year, round, college_name, ciwg)
         # checks if branch is valid
         for row in current_sheet:
             if row[1] != college_name:
                 continue
         ranks = []
         for branch in branch_list:
-            st = connectDB.get_statistics(self, year, round, college_name, branch, ciwg, check = True)
+            st = connectDB.get_statistics(
+                self, year, round, college_name, branch, ciwg, check=True)
             ranks.append([branch, st])
         return ranks
 
@@ -202,7 +210,6 @@ class connectDB:
             highclg = [clg for clg in highclg if branch.lower() in clg.lower()]
 
         return lowclg, midclg, highclg
-
 
     ## testing function remove comment out when u want to test in terminal and run connectRankDB.py
     '''
@@ -288,50 +295,53 @@ class connectDB:
 
     #Function for reverse engine
     def reverse_engine(self, rank: str, ciwg: bool, branch: str = None):
-         current_sheet = connectDB.get_sheet(self, "2023", "1")
-         index = None
-         if branch is not None:
-             branch = branch.upper()
-             if ciwg:
-                 branch += "1"
-             cutoffs, college = [int(row[5]) for row in current_sheet if branch == row[2]], [
-                 row[1] for row in current_sheet if branch == row[2]]
+        current_sheet = connectDB.get_sheet(self, "2023", "1")
+        index = None
+        if branch is not None:
+            branch = branch.upper()
+            if ciwg:
+                branch += "1"
+            cutoffs, college = [(row[5]) for row in current_sheet if branch == row[2]], [
+                row[1] for row in current_sheet if branch == row[2]]
 
-             cutoffscopy = list(cutoffs)
-             indices_to_remove = []
-             for cutoff in cutoffscopy:
-                 if int(rank) - int(cutoff) > 10000:
-                     indices_to_remove.append(cutoffs.index(cutoff))
-             for index in sorted(indices_to_remove, reverse=True):
-                 del cutoffs[index]
-                 del college[index]
-             sorted_lists = sorted(zip(cutoffs, college))
-             scutoffs, scollege = zip(*sorted_lists)
-             return scutoffs, scollege
-         else:
-             if ciwg:
-                 branches = [row[2] for row in current_sheet if row[9] == '1']
-                 cutoffs, college = [int(row[5]) for row in current_sheet if row[9] == '1'], [
-                     row[1] for row in current_sheet if row[9] == '1']
-             else:
-                 branches = [row[2] for row in current_sheet if row[9] == '0']
-                 cutoffs, college = [int(row[5]) for row in current_sheet if row[9] == '0'], [
-                     row[1] for row in current_sheet if row[9] == '0']
+            cutoffscopy = list(cutoffs)
+            indices_to_remove = []
+            for cutoff in cutoffscopy:
+                if int(rank) - int(cutoff.split(' ')[0]) > 10000:
+                    indices_to_remove.append(cutoffs.index(cutoff))
+            for index in sorted(indices_to_remove, reverse=True):
+                del cutoffs[index]
+                del college[index]
+            sorted_lists = sorted(zip(cutoffs, college))
+            scutoffs, scollege = zip(*sorted_lists)
+            return scutoffs, scollege
+        else:
+            print(1)
+            if ciwg:
+                branches = [row[2] for row in current_sheet if row[9] == '1']
+                #print('if')
+                cutoffs, college = [row[5] for row in current_sheet if row[9] == '1'], [
+                    row[1] for row in current_sheet if row[9] == '1']
+                #print('if')
+            else:
+                branches = [row[2] for row in current_sheet if row[9] == '0']
+                cutoffs, college = [row[5] for row in current_sheet if row[9] == '0'], [
+                    row[1] for row in current_sheet if row[9] == '0']
+                #print('else')
+            cutoffscopy = cutoffs.copy()
+            indices_to_remove = []
+            for cutoff in cutoffscopy:
+                if int(rank) - int(cutoff.split(' ')[0]) > 10000:
+                    indices_to_remove.append(cutoffs.index(cutoff))
+            for index in sorted(indices_to_remove, reverse=True):
+                del cutoffs[index]
+                del college[index]
+                del branches[index]
 
-             cutoffscopy = cutoffs.copy()
-             indices_to_remove = []
-             for cutoff in cutoffscopy:
-                 if int(rank) - int(cutoff) > 10000:
-                     indices_to_remove.append(cutoffs.index(cutoff))
-             for index in sorted(indices_to_remove, reverse=True):
-                 del cutoffs[index]
-                 del college[index]
-                 del branches[index]
-
-            #sorts all the colleges into one lsit
-             sorted_lists = sorted(zip(cutoffs, college, branches))
-             scutoff, scollege, sbranches = zip(*sorted_lists)
-             return (scutoff), (scollege), (sbranches)
+        #sorts all the colleges into one lsit
+            sorted_lists = sorted(zip(cutoffs, college, branches))
+            scutoff, scollege, sbranches = zip(*sorted_lists)
+            return (scutoff), (scollege), (sbranches)
 
     # initialisation function
     def __init__(self):
@@ -341,16 +351,21 @@ class connectDB:
 
         # connects to DB
 
-        db_key_path = os.path.abspath(connectDB.DB_KEY_FILENAME)  # gets path name of db_key.json
-        gc = gspread.service_account(filename = f'{db_key_path}')  # connects to service account
+        # gets path name of db_key.json
+        db_key_path = os.path.abspath(connectDB.DB_KEY_FILENAME)
+        # connects to service account
+        gc = gspread.service_account(filename=f'{db_key_path}')
 
-        self.database = gc.open_by_key(connectDB.RANK_SPREADSHEET_KEY) # connects to excel sheet
+        self.database = gc.open_by_key(
+            connectDB.RANK_SPREADSHEET_KEY)  # connects to excel sheet
 
-        self.worksheets = self.database.worksheets() # gets all the worksheets
-        self.worksheet_names = [worksheet.title for worksheet in self.worksheets] # gets names of worksheets
+        self.worksheets = self.database.worksheets()  # gets all the worksheets
+        # gets names of worksheets
+        self.worksheet_names = [
+            worksheet.title for worksheet in self.worksheets]
 
-        self.worksheet_data = [worksheet.get_all_values() for worksheet in self.worksheets]
-
+        self.worksheet_data = [worksheet.get_all_values()
+                               for worksheet in self.worksheets]
 
 
 obj = connectDB()
