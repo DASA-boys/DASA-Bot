@@ -44,7 +44,7 @@ class DASACommands(commands.Cog):
             await ctx.send("Invalid round.")
             return
 
-        if ciwg.lower() not in "yn":
+        if ciwg.lower() not in ['y', 'n', 'yes', 'no', 'true', 'false', 'ciwg', 'dasa']:
             await ctx.send("Invalid Category. Please enter y/n for ciwgc status")
 
         try:
@@ -52,7 +52,7 @@ class DASACommands(commands.Cog):
         except:
             return await ctx.send("Invalid Round.")
 
-        ciwg = True if ciwg == 'y' else False
+        ciwg = True if ciwg in ['y', 'yes', 'true', 'ciwg'] else False
         branch_list = db.request_branch_list(year, round, college,  ciwg)
         if branch is not None:
             if ciwg:
