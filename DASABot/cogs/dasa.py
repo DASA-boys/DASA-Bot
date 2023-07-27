@@ -94,7 +94,7 @@ class DASACommands(commands.Cog):
         else:
             stats = db.get_statistics_for_all(year, round, college, ciwg)
             embed = discord.Embed(
-                title=f"Cutoffs for {college}", description=f"Round {round} in ({year})\n\n**NOTE: To get the full form and cutoffs for a specific branchcode, enter </cutoff:1131246029531004968> <branch>**", color=discord.Color.random())
+                title=f"Cutoffs for {college}", description=f"Round {round} in ({year})\n\n**NOTE: To get the full form and cutoffs for a specific branchcode, please specify branch in </cutoff:1131246029531004968> command**", color=discord.Color.random())
             embed.set_thumbnail(
                 url='https://dasanit.org/dasa2023/images/dasa_new.png')
             for i in stats:
@@ -224,9 +224,9 @@ class DASACommands(commands.Cog):
                     text='This message will be automatically deleted in 120s.\nTo receive this message in your DMs, press "Send in DMs".\nTo delete this message, press "Delete".')
             m = await ctx.send(embed=embed, delete_after=120, view=view)
         else:
-            print(1)
+            # print(1)
             cutoffs, colleges, branches = db.reverse_engine(rank, ciwg, branch)
-            print(2)
+            # print(2)
             dic = {}  # {college : [[branch, cutoff], [branch, cutoff]}
             for i in range(len(colleges)):
                 if colleges[i] not in list(dic.keys()):
