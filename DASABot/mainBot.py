@@ -72,7 +72,7 @@ async def shut(ctx):
     exit()
 
 async def load():
-    for file in os.listdir("DASABot\cogs"):
+    for file in os.listdir("DASA-Bot\DASABot\cogs"):
         if file.endswith(".py"):
             await bot.load_extension(f"cogs.{file[:-3]}")
 
