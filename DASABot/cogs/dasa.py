@@ -117,13 +117,10 @@ class DASACommands(commands.Cog):
             m = await ctx.send(embed=embed, delete_after=120, view=view)
 
         async def dms_callback(interaction):
-            if interaction.user.id == ctx.author.id:
-                dmuser = await self.bot.fetch_user(ctx.author.id)
-            else:
-                dmuser = await self.bot.fetch_user(interaction.user.id)
+            dmuser = await self.bot.fetch_user(interaction.user.id)
             embed.remove_footer()
             await dmuser.send(embed=embed)
-            await ctx.send("Cutoffs have been sent in your DMs.")
+            await ctx.send(f"Cutoffs have been sent in your DMs.{interaction.user.mention}")
 
         async def delete_callback(interaction):
             if interaction.user.id == ctx.author.id:
@@ -136,14 +133,14 @@ class DASACommands(commands.Cog):
     async def cutoff_error(self, ctx, error):
         if isinstance(error, commands.CommandOnCooldown):
             em = discord.Embed(title=f"Command on Cooldown!",
-                               description=f"Try again in {error.retry_after:.1f}s.", color=discord.Color.random())
+                                description=f"Try again in {error.retry_after:.1f}s.", color=discord.Color.random())
             em.set_thumbnail(
                 url="https://dasanit.org/dasa2023/images/dasa_new.png'")
             await ctx.send(embed=em)
 
     @commands.hybrid_command()
     @commands.cooldown(1, 10, type=BucketType.user)
-    async def airport(self, ctx,
+    async def airport(self, ctx:discord.Interaction,
                       college_name: str = commands.parameter(description="example: nitc, nitt, nitk, nits, nsut, (use quotes for split names)")):
         """Displays data about the nearest airport to the college specified by the user.
         """
@@ -173,17 +170,11 @@ class DASACommands(commands.Cog):
         m = await ctx.send(embed=embed, delete_after=120, view=view)
 
         async def dms_callback(interaction):
-            await self.bot.send_message(ctx.message.author, embed=embed)
-            await interaction.response.send_message("Cutoffs have been sent in your DMs.")
-
-        async def dms_callback(interaction):
-            if interaction.user.id == ctx.author.id:
-                dmuser = await self.bot.fetch_user(ctx.author.id)
-            else:
-                dmuser = await self.bot.fetch_user(interaction.user.id)
+            dmuser = await self.bot.fetch_user(interaction.user.id)
             embed.remove_footer()
             await dmuser.send(embed=embed)
-            await ctx.send("Airport details have been sent in your DMs.")
+            await ctx.send(f"Airport details have been sent in your DMs.{interaction.user.mention}")
+
 
         async def delete_callback(interaction):
             if interaction.user.id == ctx.author.id:
@@ -203,12 +194,13 @@ class DASACommands(commands.Cog):
 
     @commands.hybrid_command()
     @commands.cooldown(1, 10, type=BucketType.user)
-    async def analyse(self, ctx, rank: str, ciwg: str, branch: str = None):
+    async def analyse(self, ctx:discord.Interaction, rank: str, ciwg: str, branch: str = None):
         """Displays a list of colleges and branches whose closing ranks closely match the user-provided rank."""
         embed = None
         m = None
-
-        ciwg = True if ciwg == 'y' else False
+        if ciwg.lower() not in ['y', 'n', 'yes', 'no', 'true', 'false', 'ciwg', 'dasa']:
+            return await ctx.send('Invalid Category.')
+        ciwg = True if ciwg.lower() in ['y', 'yes', 'true', 'ciwg'] else False
         if branch is not None:
             cutoffs, colleges = db.reverse_engine(rank, ciwg, branch)
             embed = discord.Embed(
@@ -249,10 +241,7 @@ class DASACommands(commands.Cog):
             await m.delete()
 
         async def dms_callback(interaction):
-            if interaction.user.id == ctx.author.id:
-                dmuser = await self.bot.fetch_user(ctx.author.id)
-            else:
-                dmuser = await self.bot.fetch_user(interaction.user.id)
+            dmuser = await self.bot.fetch_user(interaction.user.id)
             embed.remove_footer()
             await dmuser.send(embed=embed)
             await ctx.send(f"Cutoffs have been sent in your DMs. {interaction.user.mention}")
@@ -270,7 +259,7 @@ class DASACommands(commands.Cog):
     async def analyse_error(self, ctx, error):
         if isinstance(error, commands.CommandOnCooldown):
             em = discord.Embed(title=f"Command on Cooldown!",
-                               description=f"Try again in {error.retry_after:.2f}s.", color=discord.Color.random())
+                            description=f"Try again in {error.retry_after:.1f}s.", color=discord.Color.random())
             em.set_thumbnail(
                 url="https://dasanit.org/dasa2023/images/dasa_new.png'")
             await ctx.send(embed=em)
@@ -278,7 +267,7 @@ class DASACommands(commands.Cog):
     @commands.command()
     @commands.is_owner()
     async def welcome(self, ctx):
-        await ctx.send("Hey! So I am finally live. It's no well kept secret that I have been in development for the past month as I'm sure you would have seen my creators testing my beta versions or showcasing them for use but I am proud to announce that today is the day DASABot 1.0 is finally active! My creators have given me the following functionalities to help all of you with your future college endeavours.\n- </cutoff:1131246029531004968> which enables me to take in your college, year, round and branch to tell you the cutoff of what you asked! I even have a CIWG filter!\n- </analyse:1131969029968502918> lets me take in your JEE CRL to tell you what colleges have closing ranks close to yours so you can get a brief idea of what you can and can not get! ***This command does not signify guaranteed seats at any mentioned college. This is solely as algorithm based on CRL and Closing ranks and can not predict the ranks of forthcoming years.***\n- </airport:1133054254203011082> lets me tell you about the airports nearby the college you ask.\nAll in all, I'm glad I can finally be of service to every one of you and I look forward to helping everyone out on this server! I was made by <@536919776522534973> <@275609153274380289> <@540964533884289044> and <@506887352380162048>. Please report any bugs you encounter to them.")
+        await ctx.send("Hey @everyone! So I am finally live. It's no well kept secret that I have been in development for the past month as I'm sure you would have seen my creators testing my beta versions or showcasing them for use but I am proud to announce that today is the day DASABot 1.0 is finally active! My creators have given me the following functionalities to help all of you with your future college endeavours.\n- </cutoff:1131246029531004968> which enables me to take in your college, year, round and branch to tell you the cutoff of what you asked! I even have a CIWG filter!\n- </analyse:1131969029968502918> lets me take in your JEE CRL to tell you what colleges have closing ranks close to yours so you can get a brief idea of what you can and can not get! ***This command does not signify guaranteed seats at any mentioned college. This is solely as algorithm based on CRL and Closing ranks and can not predict the ranks of forthcoming years.***\n- </airport:1133054254203011082> lets me tell you about the airports nearby the college you ask.\nAll in all, I'm glad I can finally be of service to every one of you and I look forward to helping everyone out on this server! I was made by <@536919776522534973> <@275609153274380289> <@540964533884289044> and <@506887352380162048>. Please report any bugs you encounter to them.")
         await ctx.message.delete()
 
 async def setup(bot):
