@@ -27,7 +27,7 @@ class connectDB:
     '''
 
     # constants, try not to change
-    DB_KEY_FILENAME = "DASABot/db_key.json"
+    DB_KEY_FILENAME = "DASA-Bot\db_key.json"
     RANK_SPREADSHEET_KEY = os.getenv("RANK_SPREADSHEET_KEY")
 
     # function to get sheet data for a specific year and round
@@ -43,7 +43,7 @@ class connectDB:
             return
 
         wksdat = self.worksheet_data[sheet_index]
-        return wksdat[2:]
+        return wksdat
 
     # function to connect to airplane data sheet
     def get_air_sheet(self):
