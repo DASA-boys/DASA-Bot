@@ -27,7 +27,7 @@ class connectDB:
     '''
 
     # constants, try not to change
-    DB_KEY_FILENAME = "DASA-Bot\db_key.json"
+    DB_KEY_FILENAME = "DASABot/db_key.json"
     RANK_SPREADSHEET_KEY = os.getenv("RANK_SPREADSHEET_KEY")
 
     # function to get sheet data for a specific year and round
@@ -183,116 +183,6 @@ class connectDB:
             ranks.append([branch, st])
         return ranks
 
-    #Outdated version of reverse engine
-    #function to return 3 lists of colleges based on user's CRL and cutoff
-    def analysis(self, rank: int, ciwg: bool, branch: str = None):
-        current_sheet = connectDB.get_sheet(self, "2022", "3")
-        highclg = []
-        midclg = []
-        lowclg = []
-        for row in current_sheet:
-            val = int(row[5])
-            if not ciwg and row[9] == '1':
-                continue
-            closing_rank = f"{row[1]} {row[2]} Closing rank: {row[5]}"
-            if val - rank < 0:
-                pass
-            elif val - rank < 50000:
-                lowclg.append(closing_rank)
-            elif val - rank < 100000:
-                midclg.append(closing_rank)
-            if val - rank > 100000:
-                highclg.append(closing_rank)
-
-        if branch:
-            lowclg = [clg for clg in lowclg if branch.lower() in clg.lower()]
-            midclg = [clg for clg in midclg if branch.lower() in clg.lower()]
-            highclg = [clg for clg in highclg if branch.lower() in clg.lower()]
-
-        return lowclg, midclg, highclg
-
-    ## testing function remove comment out when u want to test in terminal and run connectRankDB.py
-    '''
-    def testing(self):
-
-        userinput= input("Please enter your selection \n1. Retrieve college rankings\n2. Enter JEE Rank to determine college chances\n")
-        if userinput == "1":
-            while True:
-                year = input("Enter year: ")
-                round = input("Enter round: ")
-
-                current_sheet = connectDB.get_sheet(self, year, round)
-                college_list = connectDB.request_college_list(self, year, round)
-
-                print("\nChoose a college from below: ")
-                for college in college_list:
-                    print(college)
-
-                breaker = True
-                while breaker:
-                    breaker = False
-                    try:
-                        college = input("\n")
-                        college = connectDB.nick_to_college(self, year, round, college)
-                    except ValueError:
-                        print("Invalid college name, re-enter")
-                        breaker = True
-
-
-                ciwg_yn = input("Are you CIWG? (Y/N) ")
-                ciwg = ciwg_yn.lower() == 'y'
-
-                branch_list = connectDB.request_branch_list(self, year, round, college, ciwg)
-
-                print(f"\nAvailable branches for {college}: " )
-                for branch in branch_list:
-                    print(branch)
-
-                branch = input("\n")
-                truebranch = branch.upper()
-                while truebranch not in branch_list:
-                    print("Invalid branch name, re-enter")
-                    branch = input()
-
-
-                stats = connectDB.get_statistics(self, year, round, college, truebranch, ciwg)
-                print(f"""
-                    \nStatistics for {college}, {truebranch}
-                    \nJEE Opening Rank: {stats[0]}
-                    \nJEE Closing Rank: {stats[1]}
-                    \nDASA Opening Rank: {stats[2]}
-                    \nDASA Closing Rank: {stats[3]}
-                        """)
-
-        elif userinput == "2":
-            rank = int(input("Enter JEE Rank: "))
-            ciwg_yn = input("Are you CIWG?(Y/N): ")
-            ciwg = ciwg_yn.lower() == 'y'
-            branch_yn = input("Which Branch?: ")
-            branch = branch_yn.upper()
-            lowclg, midclg, highclg = connectDB.analysis(self, rank, ciwg, branch)
-            print("\n\nLow chances in: \n\n")
-            for row in lowclg:
-                print(row)
-            print("\n\nMid chances in: \n\n")
-            for row in midclg:
-                print(row)
-            print("\n\nHigh chances in: \n\n")
-            for row in highclg:
-                print(row)
-
-        elif userinput == "3":
-
-            college_name = input("College: ")
-            stats = connectDB.get_airport_stats(self, college_name)
-            print("\n\nAIRPORT STATS: \n\n")
-            for row in stats:
-                print(row)
-
-        else:
-            print("Invalid input please try again")
-    '''
-
     #Function for reverse engine
     def reverse_engine(self, rank: str, ciwg: bool, branch: str = None):
         current_sheet = connectDB.get_sheet(self, "2023", "1")
@@ -301,13 +191,13 @@ class connectDB:
             branch = branch.upper()
             if ciwg:
                 branch += "1"
-            cutoffs, college = [(row[5]) for row in current_sheet if branch == row[2]], [
+            cutoffs, college = [int(row[5]) for row in current_sheet if branch == row[2]], [
                 row[1] for row in current_sheet if branch == row[2]]
 
             cutoffscopy = list(cutoffs)
             indices_to_remove = []
             for cutoff in cutoffscopy:
-                if int(rank) - int(cutoff.split(' ')[0]) > 10000:
+                if int(rank) - int(cutoff) > 10000:
                     indices_to_remove.append(cutoffs.index(cutoff))
             for index in sorted(indices_to_remove, reverse=True):
                 del cutoffs[index]
@@ -316,33 +206,28 @@ class connectDB:
             scutoffs, scollege = zip(*sorted_lists)
             return scutoffs, scollege
         else:
-            print(1)
             if ciwg:
-                branches = [row[2] for row in current_sheet if row[9] == '1']
-                #print('if')
-                cutoffs, college = [row[5] for row in current_sheet if row[9] == '1'], [
-                    row[1] for row in current_sheet if row[9] == '1']
-                #print('if')
+                branches = [row[2] for row in current_sheet if row[9] == '1' and row[2] not in ['BAR1', 'BAR', 'ARH', 'ARH1', 'ARC', 'ARC1', 'ARC', 'ARC1']]
+                cutoffs, college = [int(row[5]) for row in current_sheet if row[9] == '1' and row[2] not in ['BAR1', 'BAR', 'ARH', 'ARH1', 'ARC', 'ARC1']], [
+                    row[1] for row in current_sheet if row[9] == '1' and row[2] not in ['BAR1', 'BAR', 'ARH', 'ARH1', 'ARC', 'ARC1']]
             else:
-                branches = [row[2] for row in current_sheet if row[9] == '0']
-                cutoffs, college = [row[5] for row in current_sheet if row[9] == '0'], [
-                    row[1] for row in current_sheet if row[9] == '0']
-                #print('else')
+                branches = [row[2] for row in current_sheet if (
+                    row[9] == '0' and row[2] not in ['BAR1', 'BAR', 'ARH', 'ARH1', 'ARC', 'ARC1'])]
+                cutoffs, college = [int(row[5]) for row in current_sheet if (row[9] == '0' and row[2] not in ['BAR1', 'BAR', 'ARH', 'ARH1', 'ARC', 'ARC1'])], [
+                    row[1] for row in current_sheet if (row[9] == '0' and row[2] not in ['BAR1', 'BAR', 'ARH', 'ARH1', 'ARC', 'ARC1'])]
+
             cutoffscopy = cutoffs.copy()
             indices_to_remove = []
             for cutoff in cutoffscopy:
-                if int(rank) - int(cutoff.split(' ')[0]) > 10000:
+                if int(rank) - int(cutoff) > 10000:
                     indices_to_remove.append(cutoffs.index(cutoff))
             for index in sorted(indices_to_remove, reverse=True):
                 del cutoffs[index]
                 del college[index]
                 del branches[index]
-
-        #sorts all the colleges into one lsit
             sorted_lists = sorted(zip(cutoffs, college, branches))
             scutoff, scollege, sbranches = zip(*sorted_lists)
             return (scutoff), (scollege), (sbranches)
-
     # initialisation function
     def __init__(self):
         load_dotenv()
