@@ -36,13 +36,13 @@ async def ping(interaction: discord.Interaction):
 async def help(interaction: discord.Interaction):
     em = discord.Embed(title="DASA Bot Commands",
                         description="Display DASA cutoffs and more onto discord chat with these commands! \n", color=discord.Color.random())
-    em.add_field(name='</cutoff:1131246029531004968>  `<college> <year> <ciwg> <round> [branch]`',
+    em.add_field(name='</cutoff:1131246029531004968>  `<college> <year> <ciwg(Y/N)> <round> [branch]`',
                     value='Displays the ranks of a specified college and branch based on the user-provided year and round',
                     inline=False)
-    em.add_field(name='</analyse:1131969029968502918>  `<rank>, <ciwg>, [branch]`',
+    em.add_field(name='</analyse:1131969029968502918>  `<JEE rank>, <ciwg(Y/N)>, [branch]`',
                     value='Displays a list of colleges and branches whose closing ranks closely match the user-provided rank.',
                     inline=False)
-    em.add_field(name='</airport:1133054254203011082>  `<college]>`',
+    em.add_field(name='</airport:1133054254203011082>  `<college>`',
                     value='Displays data about the nearest airport to the college specified by the user.',
                     inline=False)
     em.set_footer(text="This message will be deleted after 1 minute.")
