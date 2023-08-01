@@ -241,8 +241,7 @@ class connectDB:
         # connects to service account
         gc = gspread.service_account(filename=f'{db_key_path}')
 
-        self.database = gc.open_by_key(
-            connectDB.RANK_SPREADSHEET_KEY)  # connects to excel sheet
+        self.database = gc.open_by_key(connectDB.RANK_SPREADSHEET_KEY)  # connects to excel sheet
 
         self.worksheets = self.database.worksheets()  # gets all the worksheets
         # gets names of worksheets

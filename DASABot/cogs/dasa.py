@@ -283,8 +283,21 @@ class DASACommands(commands.Cog):
         await ctx.message.delete()
 
     @commands.command()
-    async def mod(self, ctx):
-        await ctx.send("    ")
+    @commands.is_owner()
+    async def nsut(self, ctx):
+        await ctx.send("NSUT is like that one ex who refuses to tell you anything and is super toxic to you but she's a 10/10")
+        await ctx.message.delete()
+
+    @commands.command()
+    @commands.is_owner()
+    async def say(ctx, *, message):
+        await ctx.send(f"{message}")
+        await ctx.message.delete()
+
+    @commands.command()
+    @commands.is_owner()
+    async def spiderman(self, ctx):
+        await ctx.send("https://media.tenor.com/GIbER2Fy3UUAAAAC/spiderman-sad-spiderman.gif")
         await ctx.message.delete()
     
 
