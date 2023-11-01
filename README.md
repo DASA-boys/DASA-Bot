@@ -1,56 +1,110 @@
-_amol is **very** hot_
+# DasaBot - Discord Cutoffs and College Info Bot
 
+## Table of Contents
+- [Required Dependencies](#required-dependencies)
+- [Summary](#summary)
+- [How to Use the Bot](#how-to-use-the-bot)
+- [Project Structure](#project-structure)
+- [License](#license)
+- [Contributors](#contributors)
 
-### Following are the required pre-requisites:
+### Required Dependencies
 The following libraries can also be found in `requirements.txt` by running the following command:  
-`pip install -r requirements.txt`
+```shell
+pip install -r requirements.txt
+```
 
-gspread - `pip install gspread`  
-dotenv - `pip install python-dotenv`  
-discord.py - `pip install discord.py`  
-discord.py-pagination - `pip install discord.py-pagination`  
-pretty-help - `pip install discord-pretty-help`   
+### Summary
 
----
+DasaBot is a versatile Discord bot designed to provide information about cutoffs, college lists, and closest airports. It offers these details via Discord slash commands, processes the requests in [mainBot.py](DASABot/mainBot.py), communicates with [connectRankDB.py](DASABot/connectRankDB.py) for relevant data, and analyzes user input for any college nicknames (e.g., "nitt" for NIT Trichy). It retrieves data from a Google Sheets database and delivers the results to Discord.
 
-# Summary
+**Note:** This project is a fork of the original [DasaBot](https://github.com/DASA-boys/DASA-Bot), a collaborative effort of several authors.
 
-## Code Breakdown:
+### How to Use the Bot
 
-### mainBot.py
-1. This script is the main file for the bot.
-2. It has the commands that help in reloading cogs `def reload()` as well as shut the bot `def shut()`.
+**Slash Commands:**
+DasaBot features several slash commands that enable you to retrieve specific information. Below are the available commands:
 
-### cutoff.py
-1. This script is an command extension file containing the commands relating to DASA.
-- `cutoff` - This command retrieves the cutoffs for a given college taken from a given year, round, branch and category. If branch is not given, cutoffs for all the      branches from the given college will be displayed.  
-- `analyze` - This command returns the colleges whose closing rank cutoffs are closest to the rank inputed by the user. If branch is not givem, cutoffs for all the branches from all the colleges within a close range(i.e. 10000 higher than the given rank) of the given rank is returned.  
+#### Cutoff (branch is optional)
+- `/cutoff`: Retrieve cutoffs for a given college, year, round, branch, and category. If no branch is provided, it displays cutoffs for all branches of the college.
 
-### connectRankDB.py
+![image-001](https://github.com/Haz3-jolt/DasaBot/assets/79502699/6f3f1a64-618f-4217-bd82-a876822c52ea)
+![image-003](https://github.com/Haz3-jolt/DasaBot/assets/79502699/4e06797e-81b8-4fdd-8d33-ebe990e88800)
+![image-002](https://github.com/Haz3-jolt/DasaBot/assets/79502699/9e864e24-1706-4310-a46a-38176ebb62c4)
+![image-004](https://github.com/Haz3-jolt/DasaBot/assets/79502699/a252db12-0408-45cc-9a2c-c3e2c7b9130a)
 
-1. The script imports the necessary libraries, `gspread` for interacting with Google Sheets, as well as `os` and `pathlib` for getting filepaths etc.
-2. The script establishes a data connection to Google Sheets using the `service_account` method from `gspread`. It loads the service account credentials from a JSON file named `"DASABot/db_key.json"`.
-4. It then opens a specific google sheet using its key, and then gets all the worksheets present and adds it to an object variable called `worksheets`
-5. The script retrieves all the values from the worksheet using the `get_all_values` method and stores them in the `worksheet_data` variable in the form of a nested list. Since the data is static, the program operates based on list indexes.
+#### Analyze (branch is optional)
+- `/analyze`: Find colleges with closing rank cutoffs closest to the rank entered by the user. If no branch is provided, it displays cutoffs for all branches from colleges within a close range of the given rank.
 
-Upon this, there are multiple methods to execute specific functions:
+![image-005](https://github.com/Haz3-jolt/DasaBot/assets/79502699/e1de1d00-95ca-47f4-bd57-065b03e23d23)
+![image-006](https://github.com/Haz3-jolt/DasaBot/assets/79502699/b79c07a3-33a1-421c-999a-1598049657df)
+![image-007](https://github.com/Haz3-jolt/DasaBot/assets/79502699/4d932f65-4198-4b0c-aa61-e6d918e928de)
 
-- `get_sheet` searches the worksheet containing the cutoffs of a specific year and round
-- `request_college_list` returns a list of colleges participating in DASA counselling in a specific year and round
-- `nick_to_college` converts any college nickname to its full name and returns it
-- `request_branch_list` returns a list of valid branches under a college depending on whether the student qualifies for ciwg or not
-- `get_statistics` returns a list of the cutoff ranks for a specific branch under a college
-- `get_statistics_for_all` returns a list of cutoff ranks for all branches under a specified college (using `get_statistics`)
-- `reverse_engine` returns a list of colleges which has a closing rank cutoff closest to the rank given by the user  
-- `analysis` returns three lists each containing the names of colleges filtered out by the difference between the user's CRL and college's Round 3 JEE Closing cutoff  
+#### Airport
+- `/airport`: Get information about the closest airport to a requested college, including the airport code and distance from the airport to the college.
 
-NOTE: The code assumes the presence of the `gspread` library and a valid service account JSON file with the appropriate access to the Google Sheet.
+![image-008](https://github.com/Haz3-jolt/DasaBot/assets/79502699/3a17837c-40f2-4384-a414-513bf87ec43c)
+![image-009](https://github.com/Haz3-jolt/DasaBot/assets/79502699/aea489b4-d00c-4f72-a935-ac3eee4c6acc)
 
-### Contributors:
+#### Resupd (Mod only, non-slash command)
+- `/resupd`: A command for moderators to update results of server members automatically. It updates the result message on the server's results tab and adds users' results based on relevant year and college roles.
 
-- [Haz3jolt](https://github.com/Haz3-jolt): Full-stack Developer, designed algorithms for airport command and designed part of the legacy discord interface. Created the original commands system which was later replaced by koshy's update. Helped transition the codebase from legacy discord commands to modern slash commands using discord.py. 
-- [Koshy](https://github.com/koshyj8): Front-end Developer. Structured and designed front-end interface and coded some discord slash commands to pull data from database, and transitioned the messages from ctx.send to embed formats. Worked on the send to DMs and Delete buttons and auto delete sync.Later added a rate limit to command frequency. 
-- [Cookie](https://github.com/CookieOnCode): Backend Developer. Established and converted DASA cutoffs to usable data in XLS format. Coded algorithms to sift through data to return requested information. Built majority of the original database backend functions using gspread, published and mainted the google sheets database.
-- [Amol](https://github.com/AmolOnGitHub): Full-Stack Developer. Assisted in mapping of DASA ranks with JEE ranks within database and laid foundation for connectrankdb, also setup the original mainBot.py file and laid the foundations of the discord bot and helped setup up the discord applications.
+![image-010](https://github.com/Haz3-jolt/DasaBot/assets/79502699/d2aa80df-a14c-4eed-88ae-346b2b352652)
+![image-011](https://github.com/Haz3-jolt/DasaBot/assets/79502699/690f378d-fde3-42ba-9338-fadf504ad5ba)
 
+### Project Structure
 
+#### [connectRankDB.py](DASABot/connectRankDB.py)
+
+- This script manages data retrieval from a Google Sheets database.
+- It uses the `gspread` library for interaction with Google Sheets, as well as `os` and `pathlib` for file handling.
+- The script establishes a data connection to Google Sheets using service account credentials loaded from a JSON file ([db_key.json](DASABot/example_db_key.json)).
+- It opens a specific Google sheet, retrieves worksheets, and stores data in a nested list format for program operations.
+- Methods include:
+  - `get_sheet`: Searches for the worksheet containing the cutoffs of a specific year and round.
+  - `request_college_list`: Returns a list of colleges participating in DASA counseling for a specific year and round.
+  - `nick_to_college`: Converts college nicknames to their full names.
+  - `request_branch_list`: Returns a list of valid branches under a college based on qualification for CIWG.
+  - `get_statistics`: Provides cutoff ranks for a specific branch under a college.
+  - `get_statistics_for_all`: Retrieves cutoff ranks for all branches under a specified college using `get_statistics`.
+  - `reverse_engine`: Lists colleges with closing rank cutoffs closest to the rank given by the user.
+  - `analysis`: Returns colleges filtered by the difference between the user's CRL and a college's Round 3 JEE Closing cutoff.
+  - `get_airport_stats`: Provides information about airports closest to colleges.
+
+#### [mainBot.py](DASABot/mainBot.py)
+
+- This script is the main script for interacting with the Discord API to log in the bot.
+- It listens for Discord slash command pings and utilizes the `connectRankDB.py` class `connectDB` to retrieve data from the Google Sheets database.
+- All commands for the slash commands are stored in the [dasa.py](DASABot/cogs/dasa.py) script in the `cogs` folder.
+- Additional functionality includes:
+  - `reload()`: Reloads cogs.
+  - `shut()`: Shuts down the bot.
+
+#### [dasa.py](DASABot/cogs/dasa.py)
+
+- This script is a command extension file containing commands related to DASA.
+- Commands include:
+  - `cutoff`: Retrieve cutoffs for a specified college, year, round, branch, and category.
+  - `analyze`: Find colleges with closing rank cutoffs closest to a specified rank.
+  - `airport`: Get information about the closest airport to a requested college.
+
+#### [dasa_res.py](DASABot/cogs/dasa_res.py)
+
+- This script is a command extension file for moderator use to manage the results tab on the server.
+- `resupd` is a mod-only non-slash command that updates server members' results and adds them to the server's results tab based on relevant year and college roles.
+
+**Note:** The repository assumes the presence of the `gspread` library and a valid service account JSON file with appropriate access to the Google Sheet. Create a `.env` file with environment variables and use the provided [.example_env](DASABot/example.env) file as a reference.
+
+### License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for more details.
+
+### Contributors
+
+- [Haz3jolt](https://github.com/Haz3-jolt): Designed algorithms for the airport command, and contributed to the legacy Discord interface. Created the original command system, later replaced by Koshy's update, and transitioned the repo to modern slash commands. Also formated the README.md file and added example files for anyone intrested in forking the repo.
+
+- [Koshy](https://github.com/koshyj8): Structured and designed the front-end interface, coded Discord slash commands to retrieve data from the database, and redesigned the bot's output from messages to embeded messages with a cleaner design, added a button to save to DMs and a auto-delete function to declutter the chat. Also collaborated on the airport command with Haz3jolt. 
+
+- [Cookie](https://github.com/CookieOnCode): Established and converted DASA cutoffs into usable XLS format. Created most of the algorithms in [connectRankDB.py](DASABot/connectRankDB.py) to extract requested information from the database. Managed the test server and developer account for the bot, including relevant tokens. 
+
+- [Amol](https://github.com/AmolOnGitHub): Assisted in mapping DASA ranks with JEE ranks in the database and made the framework for [connectrankdb.py](DASABot/connectRankDB.py) and [mainBot.py](DASABot/mainBot.py). Worked on an admin-level command, `resupd`, to automatically update the server's results tab. Integrated the dotenv library to secure API and login tokens finally patching a huge security flaw.
