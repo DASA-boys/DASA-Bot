@@ -59,7 +59,7 @@ class connectDB:
         wksdat = self.worksheet_data[sheet_index]
         return wksdat[2:]
 
-    #Gets college list in airport db
+    # Gets college list in airport db
     def request_college_list_air(self):
 
         # stores all colleges for airport database pulling
@@ -253,5 +253,5 @@ class connectDB:
 
 
 obj = connectDB()
-#Uncomment next line for testing
+#Uncomment for terminal testing other wise leave it commented.
 #obj.testing()
