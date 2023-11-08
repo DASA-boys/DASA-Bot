@@ -238,13 +238,13 @@ class connectDB:
 
         # Gets path name of db_key.json
         db_key_path = os.path.abspath(connectDB.DB_KEY_FILENAME)
-        # connects to service account
+        # Connects to service account
         gc = gspread.service_account(filename=f'{db_key_path}')
-
-        self.database = gc.open_by_key(connectDB.RANK_SPREADSHEET_KEY)  # connects to excel sheet
-
-        self.worksheets = self.database.worksheets()  # gets all the worksheets
-        # gets names of worksheets
+        # Opens the spreadsheet
+        self.database = gc.open_by_key(connectDB.RANK_SPREADSHEET_KEY)
+        # Gets all worksheets
+        self.worksheets = self.database.worksheets()  
+        # Gets all worksheet names
         self.worksheet_names = [
             worksheet.title for worksheet in self.worksheets]
 
