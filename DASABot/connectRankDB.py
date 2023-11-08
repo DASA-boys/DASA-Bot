@@ -1,5 +1,6 @@
 '''
-
+This file contains the class to connect to the 
+database and fetch data from it.
 '''
 
 import gspread
@@ -33,7 +34,7 @@ class connectDB:
 
     def get_sheet(self, year: str, round: str):
 
-        # try to find a worksheet for respective year and round, raises value error if not found
+        # try: except block to check if the year and round are valid
         sheet_name = f'DASA_{year}_R{round}'
         try:
             sheet_index = self.worksheet_names.index(sheet_name)
@@ -61,7 +62,7 @@ class connectDB:
     # Gets college list in airport db
     def request_college_list_air(self):
 
-        # stores all colleges for airport database pulling
+        # Stores all colleges for airport database pulling
         current_sheet = connectDB.get_air_sheet(self)
 
         college_list = []
@@ -84,7 +85,7 @@ class connectDB:
             aliases = [ali.lower() for ali in row[6].split(', ')]
             #print(aliases)
             if college_nick.lower() in aliases:
-                return row[1]  # will return the full name of the university
+                return row[1]  # Will return the full name of the uni
 
     # Function to get airport stats
     def get_airport_stats(self, college_name):
@@ -102,7 +103,7 @@ class connectDB:
     # Function to request a list of colleges.
     def request_college_list(self, year: str, round: str):
 
-        # stores all colleges for database pulling
+        # Stores all colleges for database pulling
         current_sheet = connectDB.get_sheet(self, year, round)
 
         college_list = []
@@ -138,9 +139,9 @@ class connectDB:
         branch_list = []
         for row in current_sheet:
             if row[1] != college_name:
-                continue  # skips any irrelevant college names
+                continue  # Skips any irrelevant college names
             if not ciwg and row[9] == '1':
-                continue  # checks for non-ciwg
+                continue  # Checks for non-ciwg
             if row[2] not in branch_list:
                 branch_list.append(row[2])
         return branch_list
@@ -152,7 +153,7 @@ class connectDB:
             self, year, round, college_name, ciwg)
         code = branch_code.upper()
 
-        # checks if branch is valid
+        # Checks if branch is valid
         if code not in branch_list:
             raise ValueError("Invalid branch name")
             return
@@ -171,7 +172,7 @@ class connectDB:
         current_sheet = connectDB.get_sheet(self, year, round)
         branch_list = connectDB.request_branch_list(
             self, year, round, college_name, ciwg)
-        # checks if branch is valid
+        # Checks if branch is valid
         for row in current_sheet:
             if row[1] != college_name:
                 continue
@@ -233,9 +234,9 @@ class connectDB:
         connectDB.RANK_SPREADSHEET_KEY = os.getenv("RANK_SPREADSHEET_KEY")
         self.cwd_path = os.getcwd()
 
-        # connects to DB
+        # Connects to DB
 
-        # gets path name of db_key.json
+        # Gets path name of db_key.json
         db_key_path = os.path.abspath(connectDB.DB_KEY_FILENAME)
         # connects to service account
         gc = gspread.service_account(filename=f'{db_key_path}')
