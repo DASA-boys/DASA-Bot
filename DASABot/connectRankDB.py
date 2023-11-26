@@ -236,7 +236,7 @@ class connectDB:
 
         # connects to DB
 
-        # gets path name of db_key.json
+        # Gets path name of db_key.json
         db_key_path = os.path.abspath(connectDB.DB_KEY_FILENAME)
         # connects to service account
         gc = gspread.service_account(filename=f'{db_key_path}')
