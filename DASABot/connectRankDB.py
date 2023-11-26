@@ -167,7 +167,7 @@ class connectDB:
             # [branch name], jee_or, jee_cr, dasa_or, dasa_cr
             return row[3:8] if not check else row[4:8]
 
-    #function used to fetch stats for all branches
+    # Function used to fetch stats for all branches
     def get_statistics_for_all(self, year: str, round: str, college_name: str, ciwg: bool):
         current_sheet = connectDB.get_sheet(self, year, round)
         branch_list = connectDB.request_branch_list(
@@ -183,7 +183,7 @@ class connectDB:
             ranks.append([branch, st])
         return ranks
 
-    #Function for reverse engine
+    # Function for reverse engine
     def reverse_engine(self, rank: str, ciwg: bool, branch: str = None):
         current_sheet = connectDB.get_sheet(self, "2023", "1")
         index = None
